@@ -40,7 +40,6 @@ class Producto {
   double precio;
   int stock;
 
-  // El nombre del constructor ahora coincide con la clase.
   Producto(this.nombre, this.precio, this.stock);
 }
 
@@ -55,21 +54,17 @@ class Sesion {
     var acierto = false;
     while (intentos < maxIntentos && !acierto) {
       print("Introduce el id");
-      // Solcitamos el 'idUsuario' y lo leermos por teclado
       String? idUsuario = stdin.readLineSync();
-      // Revisamos que el idUsuario no sea null
       if (idUsuario != null) {
-        // Revisa si el ID proporcionado coincide con el ID de la sesión
         if (idSesion == idUsuario) {
           acierto = true;
           print("Has iniciado sesión. ¡Bienvenido!");
-          return; // Usa 'return' para salir de la función inmediatamente
+          return;
         }
       }
       intentos++;
     }
 
-    // Este mensaje solo se muestra si el bucle termina sin éxito
     print("No has podido iniciar sesión después de 5 intentos.");
   }
 }
