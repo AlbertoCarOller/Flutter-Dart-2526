@@ -6,11 +6,12 @@ void main() {
   saludar("Pepa");
   saludar("Atisbedo");
 
-  print("Precio IVA: ${calcularIva(20.5)}");
+  // .toStringAsFixed(numDecimales) devuelve los decimales que indiquemos
+  print("Precio IVA: ${calcularIva(20.5).toStringAsFixed(2)}");
   print("Suma de pares ${sumarPares([1, 5, 8, 12, 3, 10, 7])}");
 
   var miPapilla = Producto("Papilla", 34.9, 5);
-
+  miPapilla.mostrarInfo();
   print("Producto: ${miPapilla.nombre}");
 
   var sesion = Sesion();
@@ -41,10 +42,15 @@ class Producto {
   int stock;
 
   Producto(this.nombre, this.precio, this.stock);
+
+  void mostrarInfo() {
+    print("$nombre, $precio, $stock");
+  }
 }
 
 class Sesion {
-  final int maxIntentos = 5;
+  // Es constante porque su valor se conoce antes de ejecutarse el programa
+  static const int maxIntentos = 5;
   final int idSesion = Random().nextInt(1000000) + 1;
 
   Sesion();
