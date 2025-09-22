@@ -16,6 +16,12 @@ void main() {
 
   var sesion = Sesion();
   sesion.login();
+
+  // Probamos la función
+  print(calcularPrecioFinal(100));
+  print(calcularPrecioFinal(150, descuentoFijo: 0.10));
+  print(calcularPrecioFinal(200, descuentoPorcentual: 0.15));
+  print(calcularPrecioFinal(300, descuentoPorcentual: 0.20, descuentoFijo: 10));
 }
 
 void saludar(String nombre) {
@@ -72,5 +78,18 @@ class Sesion {
     }
 
     print("No has podido iniciar sesión después de 5 intentos.");
+  }
+}
+/* Los agumentos entre llaves son opcionales y se le pasa por nombre, los que
+ van por [] son opcionales */
+double calcularPrecioFinal(double precioBase, {double descuentoPorcentual = 0.0,
+double descuentoFijo = 0.0}) {
+  if(descuentoPorcentual <= 100) {
+    precioBase -= (precioBase * descuentoPorcentual);
+  }
+  if(descuentoFijo < precioBase) {
+    return precioBase - descuentoFijo;
+  } else {
+    return precioBase;
   }
 }
