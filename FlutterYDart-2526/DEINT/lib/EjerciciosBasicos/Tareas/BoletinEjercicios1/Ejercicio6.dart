@@ -1,4 +1,9 @@
-void main() {}
+void main() {
+  print(
+    'Producto más caro: ${productoMasCaro([Producto("Chocolate Dubai", 10.8),
+      Producto("Vainilla"), Producto("Chocolate Nestle", 7.3)])}',
+  );
+}
 
 String productoMasCaro(List<Producto> listaProductos) {
   // Descartamos los productos que no tengan el precio
