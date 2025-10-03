@@ -1,21 +1,19 @@
 void main() {
-  print(
-    "Lista: ${filtrarLista(["Dartico", "Serapio", "Atisbedo", null]) ?? "No hay datos"}",
-  );
-  print(
-    "Lista1: ${filtrarLista([null, null, null, null]) ?? "No hay datos"}",
-  );
+  print("Lista: ${filtrarLista(["Dartico", "Serapio", "Atisbedo", null])}");
+  print("Lista1: ${filtrarLista([null, null, null, null])}");
 }
 
-List<String>? filtrarLista(List<String?> lista) {
+String filtrarLista(List<String?> lista) {
   List<String>? listaNoNull = [];
   for (var i in lista) {
-    if (i != null) {
-      listaNoNull.add(i);
-    }
+    listaNoNull.add(i ?? "");
   }
-  if (listaNoNull.isEmpty) {
-    listaNoNull = null;
+  return comprobarVacio(listaNoNull.where((s) => s.isNotEmpty).toList());
+}
+
+String comprobarVacio(List<String> lista) {
+  if (lista.isEmpty) {
+    return "No hay datos";
   }
-  return listaNoNull;
+  return lista.toString();
 }
