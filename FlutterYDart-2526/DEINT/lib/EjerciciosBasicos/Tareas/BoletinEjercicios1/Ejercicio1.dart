@@ -4,6 +4,6 @@ void main() {
   print("Suma3: ${suma(null, null)}");
 }
 
-int? suma(int? num1, int? num2) {
+int? suma([int? num1, int? num2]) {
   return (num1 ?? 0) + (num2 ?? 0);
 }
