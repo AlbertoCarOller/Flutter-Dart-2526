@@ -5,10 +5,7 @@ void main() {
 
 int? buscarElemento(List<int> lista, int numABuscar) {
   int? indice = lista.indexOf(numABuscar);
-  if (indice == -1) {
-    indice = null;
-  }
-  return indice;
+  return (indice < 0) ? null : indice;
 }
 
 String obtenerResultado(List<int> lista, int numABuscar) {
