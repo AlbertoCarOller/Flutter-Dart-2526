@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 void main() {
   // Creamos una instancia de Temperatura
   Temperatura temperatura = Temperatura(25.0);
