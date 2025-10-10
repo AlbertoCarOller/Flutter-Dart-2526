@@ -36,8 +36,8 @@ class _CambioColorV2State extends State<CambioColorV2> {
       body: Center(
         // Colocamos una imagen a partir de un enlace de internet
         child: Image.network(
-          "https://upload.wikimedia.org/wikipedia/commons/"
-          "thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/"
+              "Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png",
           scale: 2,
         ),
       ),
