@@ -56,6 +56,39 @@ class _CambiaColorPantallaState extends State<CambiaColorPantalla> {
     /* Scaffold widget básico de una pantalla de este tipo para crear barra
      superior, fondo, botón flotante, etc. */
     return Scaffold(
+      // Hacemos una columna en el body y le ponemos dos imagenes
+      body: Column(
+        children: [
+          // children: [] -> Aceptan varios widgets
+          Image.asset("assets/images/bosque.jpeg"),
+          Image.asset("assets/images/playa.jpg"),
+        ],
+      ),
+      /* El Container es un contenedor que va a delimitar el contenido
+       de dentro dependiendo del tamaño de este */
+      /*body: Container(
+        color: Colors.black,
+        width: 500,
+        child: Text.rich(
+          TextSpan(
+            text: "Mi",
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              color: Colors.blueAccent,
+            ),
+            children: <TextSpan>[
+              TextSpan(
+                text: " primera",
+                style: TextStyle(color: Colors.red),
+              ),
+              TextSpan(
+                text: " App",
+                style: TextStyle(color: Colors.green),
+              ),
+            ],
+          ),
+        ),
+      ),*/
       // Color de fondo, va a ser el color verde
       backgroundColor: _color,
       // Creamos un bar con el título pasado y de color gris
