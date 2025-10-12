@@ -31,12 +31,20 @@ class Layout extends StatelessWidget {
         // Establecemos el color de fondo
         backgroundColor: Colors.brown[500],
       ),
-      body: Center( // -> Center solo afecta a su hijo inmediato, no al resto
-        child: Image.network(
-          "https://images.ctfassets.net/rporu91m20dc/"
-          "4dAkJ4bELVjWJ5HydnhOoI/412fe188214e68bc17ce78d5f5da9c30/"
-          "76_LargeHero_LockedandLoaded_PatchNotes_1920X870.jpg",
-          scale: 5,
+      // Aling nos permite alinear a nuestro gusto el widget hijo
+      body: Align(
+        alignment: Alignment.topCenter,
+        // -> Con esto indicamos que lo queremos abajo en el centro
+        // con SizedBox se crea una caja en la cual sus hijos se tendrán que adaptar en tamaño
+        child: SizedBox(
+          width: 450,
+          height: 200,
+          // -> Menos alto que largo, porque la imagen es rectangular
+          child: Image.network(
+            "https://images.ctfassets.net/rporu91m20dc/"
+            "4dAkJ4bELVjWJ5HydnhOoI/412fe188214e68bc17ce78d5f5da9c30/"
+            "76_LargeHero_LockedandLoaded_PatchNotes_1920X870.jpg",
+          ),
         ),
       ),
     );
