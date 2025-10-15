@@ -54,6 +54,22 @@ class PalabraSiguienteState extends ChangeNotifier {
   }
 }
 
+class BigCard extends StatelessWidget {
+  // Creamos el constructor
+  const BigCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    /* context.watch<PalabraSiguienteState> -> Le dice al widget que debe de
+    * escuchar o mirar los cambios realizados para la clase de tipo PalabraSiguienteState
+    * (la que contiene los valores), WATCH: REDIBUJA cuando los datos cambian. */
+    // Context es la dirección del widget, utilizamos el watch porque cambia el widget actual, que es lo que queremos
+    return Text(
+      context.watch<PalabraSiguienteState>().palabraActual.asLowerCase,
+    );
+  }
+}
+
 class Siguiente extends StatelessWidget {
   const Siguiente({super.key});
 
@@ -62,19 +78,15 @@ class Siguiente extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /* context.watch<PalabraSiguienteState> -> Le dice al widget que debe de
-    * escuchar o mirar los cambios realizados para la clase de tipo PalabraSiguienteState
-    * (la que contiene los valores), WATCH: REDIBUJA cuando los datos cambian. */
-    var appState = context.watch<PalabraSiguienteState>();
     return Scaffold(
       body: Column(
         children: [
           Text("A random AWESOME idea:"),
-          Text(appState.palabraActual.asLowerCase),
+          BigCard(),
           ElevatedButton(
             onPressed: () {
-              // Cambiamos la palabra al pulsar
-              appState.changeWord();
+              // Cambiamos la palabra al pulsar, con .read() para no modificar el estado del widget actual
+              context.read<PalabraSiguienteState>().changeWord();
             },
             child: Text("Next"),
           ),
