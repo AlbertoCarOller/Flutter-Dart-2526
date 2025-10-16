@@ -64,8 +64,15 @@ class BigCard extends StatelessWidget {
     * escuchar o mirar los cambios realizados para la clase de tipo PalabraSiguienteState
     * (la que contiene los valores), WATCH: REDIBUJA cuando los datos cambian. */
     // Context es la dirección del widget, utilizamos el watch porque cambia el widget actual, que es lo que queremos
-    return Text(
-      context.watch<PalabraSiguienteState>().palabraActual.asLowerCase,
+    var appState = context.watch<PalabraSiguienteState>();
+    return Card(
+      /* Padding es widget que permite añadir espacio al rededor de un hijo,
+      * en este caso con EdgeInsetsGeometry.all(20)) le estamos diciendo
+      * que queremos un espacio de 20 píxeles en todos los lados por eso 'all' */
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(20),
+        child: Text(appState.palabraActual.asLowerCase),
+      ),
     );
   }
 }
