@@ -27,15 +27,15 @@ class Dado extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               color: Colors.grey,
-              height: 150,
-              width: 150,
+              height: 100,
+              width: 100,
               child: Container(height: 10, width: 10, color: Colors.black),
             ),
             Container(
               color: Colors.white,
-              height: 150,
-              width: 150,
-              padding: EdgeInsets.all(15),
+              height: 100,
+              width: 100,
+              padding: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -56,9 +56,9 @@ class Dado extends StatelessWidget {
             ),
             Container(
               color: Colors.grey,
-              height: 150,
-              width: 150,
-              padding: EdgeInsets.all(15),
+              height: 100,
+              width: 100,
+              padding: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -85,9 +85,9 @@ class Dado extends StatelessWidget {
             ),
             Container(
               color: Colors.white,
-              height: 150,
-              width: 150,
-              padding: EdgeInsets.all(15),
+              height: 100,
+              width: 100,
+              padding: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -110,9 +110,9 @@ class Dado extends StatelessWidget {
             ),
             Container(
               color: Colors.grey,
-              height: 150,
-              width: 150,
-              padding: EdgeInsets.all(15),
+              height: 100,
+              width: 100,
+              padding: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -127,7 +127,39 @@ class Dado extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(height: 10, width: 10, color: Colors.black),
-                    ]
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(height: 10, width: 10, color: Colors.black),
+                      Container(height: 10, width: 10, color: Colors.black),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              height: 100,
+              width: 100,
+              padding: EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(height: 10, width: 10, color: Colors.black),
+                      Container(height: 10, width: 10, color: Colors.black),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(height: 10, width: 10, color: Colors.black),
+                      Container(height: 10, width: 10, color: Colors.black),
+                    ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
