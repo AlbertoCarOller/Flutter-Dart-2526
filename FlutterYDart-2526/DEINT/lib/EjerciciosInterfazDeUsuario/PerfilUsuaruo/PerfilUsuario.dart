@@ -51,7 +51,7 @@ class Perfil extends StatelessWidget {
                     "thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png",
                   ),
                   /* BoxFit -> Ajusta la imagen a los bordes del container,
-                   con cover nos aeguramos que cubra la imagen recortando las pasrtes sobrantes */
+                   con cover nos aseguramos que cubra la imagen recortando las pasrtes sobrantes */
                   fit: BoxFit.cover,
                 ),
               ),
