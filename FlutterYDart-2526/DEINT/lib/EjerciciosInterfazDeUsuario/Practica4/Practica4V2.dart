@@ -92,26 +92,47 @@ class Dado extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Container(height: 10, width: 10, color: Colors.black),
                       Container(height: 10, width: 10, color: Colors.black),
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Container(height: 10, width: 10, color: Colors.black),
+                      Container(height: 10, width: 10, color: Colors.black),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              color: Colors.grey,
+              height: 150,
+              width: 150,
+              padding: EdgeInsets.all(15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(height: 10, width: 10, color: Colors.black),
                       Container(height: 10, width: 10, color: Colors.black),
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(height: 10, width: 10, color: Colors.black),
-                    ],
+                    ]
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Container(height: 10, width: 10, color: Colors.black),
                       Container(height: 10, width: 10, color: Colors.black),
                     ],
                   ),
