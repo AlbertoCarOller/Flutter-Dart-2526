@@ -24,7 +24,14 @@ class Login extends StatelessWidget {
           Container(color: Colors.blue.shade100),
           /* Obliga a la imagen a ser tan grande y alta como su padre, el stack,
            Expanded en cambio te permite en cuanto a ancho o largo, depende, ya
-            que necesita un eje principal para expandirse*/
+            que necesita un eje principal para expandirse, auqnue obligue a tener el tamaño
+            del padre, la imagen puede tener lo que ella misma tenga con las restricciones del
+            padre claro, y si no se le pone cover, no ocupa el espacio completo,ç
+            simplemente se centra*/
+          /* IMPORTANTE: esto le pasa la regla de ORO a la imagen (cosa que tiene container),
+          * que tenga las dimesiones de su padre, STACK ,
+          * los únicos widgets de los cuales STACK respeta el tamaño sin regla de oro son
+          * combinando el widget con  Aling y Positioned*/
           Positioned.fill(
             // Opacity permite poner una opacidad a un hijo, en este caso una imagen
             child: Opacity(
@@ -33,7 +40,8 @@ class Login extends StatelessWidget {
                 image: NetworkImage(
                   "https://blog.bonda.com/hubfs/Imported_Blog_Media/amistad.jpeg",
                 ),
-                // Evita que la imagen se deforme, ocupa lo que el elemento debe ocupar
+                /* Evita que la imagen se deforme, ocupa el máximo espacio del
+                 padre (depende del mucho del padre que sea, CUIDADO) */
                 fit: BoxFit.cover,
               ),
             ),
