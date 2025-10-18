@@ -76,6 +76,15 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 Expanded(
+                  /* El container se encoge si tiene hijos dentro de Row o Colum,
+                  * ya que es cuidadoso en caso de que esa Row o Colum no tengan
+                  * un tamaño definido, el center se estira lo maximo que pueda
+                  * sin importancia de que tenga hijos o no.
+                  * El container a menos que se le especifique tamaño o tenga dentro un widget
+                  * como center este se estira a lo que le permite el Row y obliga
+                  * al padre, el container, a estirarse con él, ya que el center
+                  * tiene la regla de que se estira hasta donde le permita el padre,
+                  * en este caso el abuelo */
                   child: Container(
                     color: Colors.purple.shade300,
                     child: Center(child: Text("Botón 3")),
