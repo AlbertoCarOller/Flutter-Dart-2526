@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   email_validator: ^3.0.0
+  google_fonts: ^6.1.0 # -> Añadimos fuentes para textos de google
   flutter:
     sdk: flutter
 
