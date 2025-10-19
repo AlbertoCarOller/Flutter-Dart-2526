@@ -66,6 +66,7 @@ class Cuadro extends StatelessWidget {
             children: [
               // Expanded tiene el tamaño máximo de su padre, no es infinity, así no da problemas para el Grid
               Expanded(
+                flex: 3,
                 /* Cuadro de filas y columnas, con .count metemos nostros manualmente los hijos
                   * IMPORTANTE: a widgets como este hay que pasarle un tamaño que no sea infinito,
                   * de lo contrario colapsará */
@@ -259,6 +260,33 @@ class Cuadro extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Card(
+                    color: Colors.orangeAccent.shade700,
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(10),
+                      child: Text(
+                        "Fallout transcurre en un futuro postapocalíptico tras una guerra nuclear"
+                        " en 2077 entre EE. UU. y China que devastó el planeta. Antes del desastre,"
+                        " el gobierno estadounidense creó refugios subterráneos llamados Vaults,"
+                        " supuestamente para proteger a la población, aunque muchos fueron usados"
+                        " para experimentos sociales. Siglos después, los supervivientes emergen"
+                        " a un yermo desolado donde la radiación ha creado mutantes, bandidos"
+                        " y facciones enfrentadas. Cada juego sigue a un personaje distinto. A lo largo de la"
+                        " saga, el conflicto entre la tecnología, la humanidad y el poder define el"
+                        " tono de este mundo retrofuturista inspirado en los años 50.",
+                        style: GoogleFonts.acme(
+                          fontSize: 15,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
