@@ -26,10 +26,10 @@ class Pares extends StatelessWidget {
       body: ListView.separated(
         itemBuilder: (context, index) {
           // Multiplicamos por 2 para que salgan los números pares
-          return Text("${index * 2}");
+          return Text("${(index + 1) * 2}");
         },
         separatorBuilder: (context, index) {
-          return Divider(color: Colors.blue,);
+          return Divider(color: Colors.blue, thickness: 5,);
         },
         itemCount: 100,
       ),
