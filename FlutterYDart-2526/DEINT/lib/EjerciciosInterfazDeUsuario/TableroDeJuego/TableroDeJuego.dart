@@ -54,7 +54,7 @@ class Tablero extends StatelessWidget {
             flex: 3,
             // Container de la estructura completa de arriba
             child: Container(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.all(6),
               color: Color.fromARGB(255, 55, 71, 79),
               // Fila de parte de arriba (gris)
               child: Row(
