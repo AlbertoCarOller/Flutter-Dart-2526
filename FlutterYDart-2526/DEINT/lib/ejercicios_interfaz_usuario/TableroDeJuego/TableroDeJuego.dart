@@ -175,10 +175,7 @@ class Tablero extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Jugador ${index + 1} movió pieza",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
+                                  (index % 2 == 0) ? Text("Jugador 1 movió pieza") : Text("Jugador 2 movió pieza"),
                                   Text(
                                     "Caballero a la casilla C4",
                                     style: TextStyle(fontSize: 10),
