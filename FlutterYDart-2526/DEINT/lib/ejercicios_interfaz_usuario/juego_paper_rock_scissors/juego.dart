@@ -139,34 +139,39 @@ class _JuegoState extends State<Juego> {
                 Expanded(
                   child: Container(
                     alignment: Alignment.topCenter,
-                    child: TextButton(
-                      // TextButton.styleFrom dentro de style para poner estilos de forma sencilla a un TextButton
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.pink,
-                      ),
-                      child: Text(
-                        "GO!!!",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        // setState() importante para cambiar el estado, reconstuye el build
-                        setState(() {
-                          // Recibimos los datos aleatorios
-                          MapEntry<String, int> valoresPrimera = determinar(
-                            num,
-                          );
-                          MapEntry<String, int> valoresSegunda = determinar(
-                            num,
-                          );
-                          // Cambiamos el estado de la imagen
-                          imagen1 = valoresPrimera.key;
-                          imagen2 = valoresSegunda.key;
-                          // Actualizamos el valor de los números
-                          num1 = valoresPrimera.value;
-                          num2 = valoresSegunda.value;
-                        });
-                      },
+                    child: Container(
+                      height: 30,
+                      width: 300,
+                      color: Colors.pink,
+                      child: TextButton(
+                    // TextButton.styleFrom dentro de style para poner estilos de forma sencilla a un TextButton
+                    style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                      backgroundColor: Colors.pink,
+                    ),
+              child: Text(
+                "GO!!!",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                // setState() importante para cambiar el estado, reconstuye el build
+                setState(() {
+                  // Recibimos los datos aleatorios
+                  MapEntry<String, int> valoresPrimera = determinar(
+                    num,
+                  );
+                  MapEntry<String, int> valoresSegunda = determinar(
+                    num,
+                  );
+                  // Cambiamos el estado de la imagen
+                  imagen1 = valoresPrimera.key;
+                  imagen2 = valoresSegunda.key;
+                  // Actualizamos el valor de los números
+                  num1 = valoresPrimera.value;
+                  num2 = valoresSegunda.value;
+                });
+              },
+            ),
                     ),
                   ),
                 ),
@@ -175,17 +180,22 @@ class _JuegoState extends State<Juego> {
                   child: Container(
                     padding: EdgeInsets.only(bottom: 20),
                     alignment: Alignment.topCenter,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.pink,
-                        foregroundColor: Colors.white,
+                    child: Container(
+                      height: 30,
+                      width: 300,
+                      color: Colors.pink,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.pink,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: Text("Ver resultado"),
+                        onPressed: () {
+                          mensaje = determinarGanador(num1, num2);
+                          // Pasamos a la pantalla 'resultado', pasándole el mensaje
+                          Navigator.pushNamed(context, "/resultado", arguments: mensaje);
+                        },
                       ),
-                      child: Text("Ver resultado"),
-                      onPressed: () {
-                        mensaje = determinarGanador(num1, num2);
-                        // Pasamos a la pantalla 'resultado', pasándole el mensaje
-                        Navigator.pushNamed(context, "/resultado", arguments: mensaje);
-                      },
                     ),
                   ),
                 ),
