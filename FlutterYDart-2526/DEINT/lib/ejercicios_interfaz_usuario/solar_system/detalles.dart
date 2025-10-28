@@ -13,7 +13,7 @@ class Detalles extends StatelessWidget {
     return Scaffold(
       // No hace fala poner un .pop porque AppBar es inteligente y crea un .pop en él
       appBar: AppBar(
-        title: Text("Planet Details", style: TextStyle(color: Colors.white)),
+        title: Text(planeta.nombre, style: TextStyle(color: Colors.white)),
         // Centramos el título
         centerTitle: true,
         backgroundColor: Colors.grey,
