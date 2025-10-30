@@ -28,6 +28,7 @@ class Detalles extends StatelessWidget {
           // Información
           Expanded(
             child: Container(
+              padding: EdgeInsets.all(15),
               alignment: Alignment.topCenter,
               child: Text(planeta.descripcion, style: TextStyle(fontSize: 20)),
             ),
