@@ -86,55 +86,53 @@ class Tablero extends StatelessWidget {
                         color: Color.fromARGB(255, 69, 90, 100),
                       ),
                       // Columna general
-                      child: Expanded(
-                        child: Column(
-                          children: [
-                            // Columna jugador azul
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Texto
-                                  Text(
-                                    "Jugador 1 (Azul)",
-                                    style: TextStyle(color: Colors.white),
+                      child: Column(
+                        children: [
+                          // Columna jugador azul
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Texto
+                                Text(
+                                  "Jugador 1 (Azul)",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                // Icono jugador azul
+                                Icon(Icons.person, color: Colors.blue),
+                                Text(
+                                  "Puntos: 120",
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    color: Colors.white,
                                   ),
-                                  // Icono jugador azul
-                                  Icon(Icons.person, color: Colors.blue),
-                                  Text(
-                                    "Puntos: 120",
-                                    style: TextStyle(
-                                      fontSize: 8,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            // Columna de jugador rojo
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Texto
-                                  Text(
-                                    "Jugador 2 (Rojo)",
-                                    style: TextStyle(color: Colors.white),
+                          ),
+                          // Columna de jugador rojo
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Texto
+                                Text(
+                                  "Jugador 2 (Rojo)",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                // Icono jugador rojo, _outline para que no tenga relleno
+                                Icon(Icons.person_outline, color: Colors.red),
+                                Text(
+                                  "Puntos: 120",
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    color: Colors.white,
                                   ),
-                                  // Icono jugador rojo, _outline para que no tenga relleno
-                                  Icon(Icons.person_outline, color: Colors.red),
-                                  Text(
-                                    "Puntos: 120",
-                                    style: TextStyle(
-                                      fontSize: 8,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -175,7 +173,9 @@ class Tablero extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  (index % 2 == 0) ? Text("Jugador 1 movió pieza") : Text("Jugador 2 movió pieza"),
+                                  (index % 2 == 0) ? Text(
+                                      "Jugador 1 movió pieza") : Text(
+                                      "Jugador 2 movió pieza"),
                                   Text(
                                     "Caballero a la casilla C4",
                                     style: TextStyle(fontSize: 10),
