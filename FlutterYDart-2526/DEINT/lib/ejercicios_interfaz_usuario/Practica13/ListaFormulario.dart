@@ -41,40 +41,51 @@ class _ListaState extends State<Lista> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         // Le asignamos al formulario la clave generada para este
         key: _formKey,
-        child: ListView.separated(
-          itemBuilder: (context, index) {
-            return (index != 29)
-            // Container para darle una altura de 30
-                ? Container(
-                    height: 30,
-                    alignment: Alignment.center,
-                    child: ListTile(leading: Text("${index + 1}")),
-                  )
-                // Creamos el TextFormField para rellenar el campo
-                : TextFormField(
-                    // validator -> Lambda que nos permite validar el campo, OJO, debe llamarse a la validación
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "El campo es obligatorio";
-                      }
-                    },
-                    // InputDecoration para poder editarlo
-                    decoration: InputDecoration(
-                      // label es el texto flotante que aparece arriba
-                      label: Text("Nombre"),
-                      // hintText texto que aparece donde escribir a modo de ayuda
-                      hintText: "Introduce tu nombre aquí",
-                      // Icono de decoración
-                      icon: Icon(Icons.person),
-                    ),
-                    // onChanged hace algo cuando cambia el valor
-                    onChanged: (value) => print("Valor: $value"),
-                  );
-          },
-          separatorBuilder: (context, index) => Divider(),
-          itemCount: 50,
-        ),
+        child: ListaCuerpo(),
       ),
+    );
+  }
+}
+
+class ListaCuerpo extends StatelessWidget {
+  const ListaCuerpo({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemBuilder: (context, index) {
+        return (index != 29)
+            // Container para darle una altura de 30
+            ? Container(
+                height: 30,
+                alignment: Alignment.center,
+                child: ListTile(leading: Text("${index + 1}")),
+              )
+            // Creamos el TextFormField para rellenar el campo
+            : TextFormField(
+                // validator -> Lambda que nos permite validar el campo, OJO, debe llamarse a la validación
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "El campo es obligatorio";
+                  }
+                },
+                // InputDecoration para poder editarlo
+                decoration: InputDecoration(
+                  // label es el texto flotante que aparece arriba
+                  label: Text("Nombre"),
+                  // hintText texto que aparece donde escribir a modo de ayuda
+                  hintText: "Introduce tu nombre aquí",
+                  // Icono de decoración
+                  icon: Icon(Icons.person),
+                ),
+                // onChanged hace algo cuando cambia el valor
+                onChanged: (value) => print("Valor: $value"),
+              );
+      },
+      separatorBuilder: (context, index) => Divider(),
+      itemCount: 50,
     );
   }
 }
