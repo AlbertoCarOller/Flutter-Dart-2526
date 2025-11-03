@@ -30,6 +30,7 @@ class _ListaState extends State<Lista> {
     remoto del formulario, es decir puedes acceder a funciones del formulario,
     como validaciones y demás estando fuera de 'Form'*/
   final _formKey = GlobalKey<FormState>();
+  // TODO: añadir un controlador en vez de el onChanged
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +49,7 @@ class _ListaState extends State<Lista> {
 }
 
 class ListaCuerpo extends StatelessWidget {
-  const ListaCuerpo({
-    super.key,
-  });
+  const ListaCuerpo({super.key});
 
   @override
   Widget build(BuildContext context) {
