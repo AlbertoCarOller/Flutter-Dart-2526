@@ -35,7 +35,7 @@ class _ListaState extends State<Lista> {
   * de texto, necesita un listener para escuchar los cambios, te permite también
   * modificar el texto desde fuera, por ejemplo si quiero un botón para eliminarlo,
   * además mantiene el valor, no se destruye al hacer scroll. Las ListView destuyen
-  * el contenido al hacer scroll y después lo reconstruye, guardándolo a este
+  * el contenido al hacer scroll y después lo reconstruye, guardándolo, a este
   * nivel no se destruyen porque no está dentro de la ListView, en caso de que
   * usara onChanged como está dentro sí se destruiría aparte de que el
   * TextFormField sabe que tiene el controlador asociado, y sabe mantener el texto*/
