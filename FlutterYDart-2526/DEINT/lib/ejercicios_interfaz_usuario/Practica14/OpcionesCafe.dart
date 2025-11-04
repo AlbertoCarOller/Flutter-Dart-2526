@@ -39,7 +39,7 @@ class _CafeState extends State<Cafe> {
             OpcionSize(
               cafeSize: _cafeSize,
               cafeSizeValue: CafeSize.values.elementAt(i),
-              modificadorReal: (value) { // TODO: repasar esto bien mañana
+              modificadorReal: (value) {
                 setState(() {
                   _cafeSize = value!;
                 });
@@ -78,7 +78,7 @@ class OpcionSize extends StatelessWidget {
       // Grupo de valores
       groupValue: cafeSize,
       // A que valor cambia, obviamente va a ser al valor mnostrado en 'value'
-      onChanged: modificadorReal, // TODO: repasar bien esto mañana
+      onChanged: modificadorReal,
     );
   }
 }
