@@ -77,7 +77,7 @@ class OpcionSize extends StatelessWidget {
       title: Text(cafeSizeValue.name.toUpperCase()),
       // Grupo de valores
       groupValue: cafeSize,
-      // A que valor cambia, obviamente va a ser al valor mnostrado en 'value'
+      // A que valor cambia, obviamente va a ser al valor mostrado en 'value'
       onChanged: modificadorReal,
     );
   }
