@@ -61,7 +61,7 @@ class _TextoState extends State<Texto> {
                       return "No puede estar vacío";
                     }
                   },
-                  // Field representa el controlador de FormFieldState (FormField)
+                  // field representa el controlador de FormFieldState (FormField) avisa a su jefe form dependiendo del método
                   builder: (field) {
                     return TextField(
                       // Se necesita un decoration: InputDecoration() -> Para establecer el 'errorText'
@@ -69,7 +69,7 @@ class _TextoState extends State<Texto> {
                         label: Text("Introduce tu nombre"),
                         errorText: field.errorText,
                       ),
-                      controller: controller,
+                      controller: controller, // controller del text pasa el valor a field
                       // Le damos el valor al controlador
                       onChanged: (value) => field.didChange(value),
                     );
