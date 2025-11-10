@@ -69,7 +69,7 @@ class _TextoState extends State<Texto> {
                         label: Text("Introduce tu nombre"),
                         errorText: field.errorText,
                       ),
-                      controller: controller, // controller del text pasa el valor a field
+                      controller: controller, // controller del text, pasa el valor a field
                       // Le damos el valor al controlador
                       onChanged: (value) => field.didChange(value),
                     );
