@@ -209,7 +209,7 @@ class _CentralState extends State<Central> {
 /// Esta widget va a crear los CheckBox personalizados
 class CheckBoxPersonalizado extends StatelessWidget {
   /* Creamos una función que recibe un
-   String y no devuelve nada, esta función cambiará el valor de la varible arriba */
+   String y no devuelve nada, esta función cambiará el valor de la variable arriba */
   final void Function(bool) subirValor;
   final String nombre; // -> Título del CheckBox
   final bool valorActual; // -> Valor actual del CheckBox
