@@ -178,6 +178,7 @@ class _CentralState extends State<Central> {
                         arguments: [
                           textControllerJob.text,
                           if (isRemote) "100% remote" else "100% presential",
+                          if(numExperiencias != 0)
                           "Experience in ${isFlutter ? "Flutter" : ""} "
                               " $separador1 ${isAndroid ? "Android" : ""}"
                               " $separador2 ${isIOS ? "iOS" : ""}",
