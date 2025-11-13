@@ -52,6 +52,7 @@ class _TextoState extends State<Texto> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // FormField -> El cerebro que necesita y no tiene TextField, para validar, entre otras cosas
                 FormField<String>(
                   // Validamos que el campo no esté vacío
                   validator: (value) {
