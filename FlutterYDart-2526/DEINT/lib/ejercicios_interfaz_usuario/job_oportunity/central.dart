@@ -26,7 +26,7 @@ class _CentralState extends State<Central> {
   // Variable que controla la selección de iOS
   bool isIOS = false;
 
-  // Varible que controla los rangos iniciales, NO DEBE SER FINAL, porque entonces no se puede cambiar su rango
+  // Varible que controla los rangos iniciales, NO DEBE SER FINAL, porque entonces no se puede cambiar su rango de valores
   RangeValues _values = RangeValues(20, 30);
 
   // Contador de experiencias
