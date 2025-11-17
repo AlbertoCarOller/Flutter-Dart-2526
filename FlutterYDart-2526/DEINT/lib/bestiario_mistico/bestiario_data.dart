@@ -4,7 +4,7 @@ class Criatura {
   final String nombre;
   final Alineamiento alineamiento;
   final bool esHostil;
-  final double nivelPeligro;
+  final int nivelPeligro;
 
   Criatura(this.nombre, this.alineamiento, this.esHostil, this.nivelPeligro);
 }
