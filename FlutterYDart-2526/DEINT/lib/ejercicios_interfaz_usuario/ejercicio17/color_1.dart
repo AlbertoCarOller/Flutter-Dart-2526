@@ -10,6 +10,7 @@ class Color1 extends StatefulWidget {
 
 class _Color1State extends State<Color1> {
   final _formKey = GlobalKey<FormState>();
+  // LAS VARAIBLES AQUÍ ARRIBA NO CAMBIAN, NO SE MODIFICAN
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,9 @@ class _Color1State extends State<Color1> {
                 titulo: color.key),
           Container(
             padding: EdgeInsets.only(top: 90),
-            child: ElevatedButton(onPressed: () {
+            // Se comprueba si hay colores activos
+            child: ElevatedButton(onPressed: !GrupoColores.activo.values
+                .contains(true) ? null :() {
               Navigator.pushNamed(context, "/color2");
             }, child: Text("GO")),
           )

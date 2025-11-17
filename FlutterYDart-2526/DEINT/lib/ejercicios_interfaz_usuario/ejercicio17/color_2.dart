@@ -11,15 +11,8 @@ class Color2 extends StatefulWidget {
 class _Color2State extends State<Color2> {
   final _formKey = GlobalKey<FormState>();
 
-  // Los valores de colores activos
-  Color _grupoColores =
-      GrupoColores.getColorsActivos()
-          .map((c) => c.value)
-          /* Extraemos los valores de los colores y seleccionamos uno, en caso de que
-       no haya colores activos, seleccionamos trasparent, un group values necesita que
-       uno siempre esté seleccionado*/
-          .firstOrNull ??
-      Colors.transparent;
+  // La variable Color no se incializa por lo que será null, no se le tiene porque dar valor
+  Color? _grupoColores;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +50,7 @@ class _Color2State extends State<Color2> {
                   SizedBox(height: 90),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: _grupoColores == null ? null : () {
                         Navigator.pushNamed(
                           context,
                           "/final",
