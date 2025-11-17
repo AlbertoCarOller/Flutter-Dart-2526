@@ -18,7 +18,7 @@ class GrupoColores {
   };
 
   // Esta función va a devolver los colores que estén activos
-   /*Iterable<MapEntry<String, Color>> getColorsActivos()  {
-     return colores.entries.where((c) => activo[c.key] == true);
-   }*/
+  static Iterable<MapEntry<String, Color>> getColorsActivos() {
+    return colores.entries.where((c) => activo[c.key] == true);
+  }
 }
