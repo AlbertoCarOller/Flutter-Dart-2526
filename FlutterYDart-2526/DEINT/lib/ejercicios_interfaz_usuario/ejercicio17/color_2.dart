@@ -29,6 +29,8 @@ class _Color2State extends State<Color2> {
         key: _formKey,
         child: Column(
           children: [
+            /* Con RadioGroup cambia el valor de la del grupo de valores directamente,
+             no hace falta subir el valor */
             RadioGroup(
               groupValue: _grupoColores,
               onChanged: (value) => setState(() {
@@ -37,10 +39,7 @@ class _Color2State extends State<Color2> {
               child: Column(
                 children: [
                   for (
-                    int i = 0;
-                    i < GrupoColores.getColorsActivos().length;
-                    i++
-                  )
+                    int i = 0; i < GrupoColores.getColorsActivos().length; i++)
                     RadioPersonalizado(
                       valorActual: GrupoColores.getColorsActivos()
                           .elementAt(i)

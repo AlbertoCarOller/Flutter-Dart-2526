@@ -10,7 +10,7 @@ class Color1 extends StatefulWidget {
 
 class _Color1State extends State<Color1> {
   final _formKey = GlobalKey<FormState>();
-  // LAS VARAIBLES AQUÍ ARRIBA NO CAMBIAN, NO SE MODIFICAN
+  // LAS VARAIBLES AQUÍ ARRIBA NO CAMBIAN
 
   @override
   Widget build(BuildContext context) {
