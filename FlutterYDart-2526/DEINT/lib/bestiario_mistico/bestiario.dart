@@ -20,9 +20,8 @@ class _BestiarioState extends State<Bestiario> {
           padding: EdgeInsets.all(10),
           child: FloatingActionButton(
             backgroundColor: Colors.tealAccent,
-            onPressed: () async {
-              await Navigator.pushNamed(context, "/crear");
-              setState(() {});
+            onPressed: ()  {
+              Navigator.pushNamed(context, "/crear", arguments:  reloadBeasts);
             },
             child: Text("+"),
           ),
@@ -43,5 +42,14 @@ class _BestiarioState extends State<Bestiario> {
             .toList(),
       ),
     );
+  }
+
+  /// Esta función reconstruye el build de esta página,
+  /// la utilizaremos para en vez de utilizar el 'Future' podamos
+  /// recargar la página una vez guarde una bestia
+  void reloadBeasts(){
+    setState(() {
+      print("Loading new beasts ........... ");
+    });
   }
 }

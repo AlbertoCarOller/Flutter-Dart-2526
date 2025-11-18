@@ -29,6 +29,9 @@ class _CrearBestiaState extends State<CrearBestia> {
 
   @override
   Widget build(BuildContext context) {
+    final misArgumentos = ModalRoute.of(context)!.settings.arguments as Function;
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
@@ -116,6 +119,8 @@ class _CrearBestiaState extends State<CrearBestia> {
                                     ),
                                   );
                                   Navigator.pop(context);
+                                  // Una vez se hace pop, se llama seguidamente se llama a la función que va a recargar
+                                  misArgumentos();
                                 }
                               },
                         child: Text("Guardar"),
