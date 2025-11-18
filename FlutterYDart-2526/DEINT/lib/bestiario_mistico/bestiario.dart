@@ -20,8 +20,8 @@ class _BestiarioState extends State<Bestiario> {
           padding: EdgeInsets.all(10),
           child: FloatingActionButton(
             backgroundColor: Colors.tealAccent,
-            onPressed: ()  {
-              Navigator.pushNamed(context, "/crear", arguments:  reloadBeasts);
+            onPressed: () {
+              Navigator.pushNamed(context, "/crear", arguments: reloadBeasts);
             },
             child: Text("+"),
           ),
@@ -29,6 +29,8 @@ class _BestiarioState extends State<Bestiario> {
       ),
       body: GridView(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisSpacing: 2,
+          crossAxisSpacing: 2,
           crossAxisCount: 2,
         ),
         children: BestiarioDataBase.getCriaturas()
@@ -36,7 +38,18 @@ class _BestiarioState extends State<Bestiario> {
               (c) => Container(
                 alignment: Alignment.center,
                 color: Colors.cyan,
-                child: Text(c.nombre, style: TextStyle(color: Colors.white)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(c.nombre, style: TextStyle(color: Colors.white)),
+                    Text("Nivel de peligro ${c.nivelPeligro}"),
+                    Text("Alineamiento: ${c.alineamiento.name.toUpperCase()}"),
+                    c.esHostil
+                        ? Icon(Icons.warning_amber_sharp)
+                        : Icon(Icons.gpp_good),
+                  ],
+                ),
               ),
             )
             .toList(),
@@ -47,7 +60,7 @@ class _BestiarioState extends State<Bestiario> {
   /// Esta función reconstruye el build de esta página,
   /// la utilizaremos para en vez de utilizar el 'Future' podamos
   /// recargar la página una vez guarde una bestia
-  void reloadBeasts(){
+  void reloadBeasts() {
     setState(() {
       print("Loading new beasts ........... ");
     });
