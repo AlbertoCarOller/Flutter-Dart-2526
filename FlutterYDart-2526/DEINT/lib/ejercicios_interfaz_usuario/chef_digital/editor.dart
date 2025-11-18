@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:deint/ejercicios_interfaz_usuario/chef_digital/receta_data.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,11 @@ class _EditorState extends State<Editor> {
   final _textGrasas = TextEditingController();
   final _textProteinas = TextEditingController();
 
+  // La lista de ingredientes temporales, para después añadirlo al objeto real
+  final List<Ingrediente> ingredientes = [];
+  final _textIngrediente = TextEditingController();
+  final _textCantidadGramos = TextEditingController();
+
   /* Disfrazamos el mapa de get porque no se pueden utilizar variables aquí para
    declarar a otras, si lo ponemos como función si valdrá */
   Map<String, TextEditingController> get _mapaText => {
@@ -35,8 +42,8 @@ class _EditorState extends State<Editor> {
     _textCalorias.addListener(() => print(_textCalorias.text));
     _textGrasas.addListener(() => print(_textGrasas.text));
     _textProteinas.addListener(() => print(_textProteinas.text));
-    // La lista de ingredientes
-    final List<Ingrediente> ingredientes = [];
+    _textIngrediente.addListener(() => print(_textIngrediente.text));
+    _textCantidadGramos.addListener(() => print(_textCantidadGramos.text));
   }
 
   @override
@@ -45,6 +52,8 @@ class _EditorState extends State<Editor> {
     _textGrasas.dispose();
     _textCalorias.dispose();
     _textProteinas.dispose();
+    _textIngrediente.dispose();
+    _textCantidadGramos.dispose();
     super.dispose();
   }
 
@@ -59,11 +68,11 @@ class _EditorState extends State<Editor> {
         ),
         centerTitle: true,
         backgroundColor: Colors.pink.shade400,
-        // Se colocan a la derecha del AppBar y realizan una acción
+        // Se colocan a la derecha del AppBar y realizan una acción o varias
         actions: [
           IconButton(
             onPressed: () =>
-            // _scrollState.jumpTo() -> para ir a esa posición concreta
+                // _scrollState.jumpTo() -> para ir a esa posición concreta
                 _scrollState.jumpTo(_scrollState.position.minScrollExtent),
             icon: Icon(Icons.arrow_upward),
           ),
@@ -123,6 +132,58 @@ class _EditorState extends State<Editor> {
                       ),
                     ),
                   SizedBox(width: 1),
+                ],
+              ),
+              SizedBox(height: 40),
+              Column(
+                children: [
+                  Center(child: Text("Ingredientes")),
+                  Row(
+                    spacing: 20,
+                    children: [
+                      SizedBox(width: 1),
+                      Expanded(
+                        flex: 1,
+                        child: TextField(
+                          texto: "Cantidad en gramos",
+                          controller: _textCantidadGramos,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Se debe de introducir un nombre para el ingrediente";
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            label: Text("Nombre ingrediente"),
+                          ),
+                          controller: _textIngrediente,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => {
+                          setState(() {
+                            /* Si los campos son correctos, sobre todo los que corresponde al
+                               ingrediente, se añade a la lista */
+                            if (_formKey.currentState!.validate()) {
+                              ingredientes.add(
+                                Ingrediente(
+                                  _textIngrediente.text,
+                                  _textCantidadGramos.text as double,
+                                ),
+                              );
+                            }
+                          }),
+                        },
+                        icon: Icon(Icons.add),
+                      ),
+                      SizedBox(width: 1),
+                    ],
+                  ),
                 ],
               ),
             ],
