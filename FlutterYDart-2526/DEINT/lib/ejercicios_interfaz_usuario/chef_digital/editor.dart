@@ -230,7 +230,7 @@ class _EditorState extends State<Editor> {
                     /* -> shrinkWrap a true hace el ListView ocupe lo que ocupen sus hijos
                      no todo lo que pueda */
                     shrinkWrap: true,
-                    /* Esto hace que la lista por sí sola no se scrollable, de eso
+                    /* Esto hace que la lista por sí sola no seq scrollable, de eso
                      ya se encarga el padre, de lo contrario explotaría */
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
@@ -268,15 +268,18 @@ class _EditorState extends State<Editor> {
                         Navigator.pushNamed(
                           context,
                           "/resumen",
-                          arguments: Receta(
-                            _textController.text,
-                            double.parse(_textCalorias.text),
-                            double.parse(_textGrasas.text),
-                            double.parse(_textGrasas.text),
-                            _esVegano,
-                            nivelDificultad.round(),
-                            ingredientes,
-                          ),
+                          arguments: [
+                            Receta(
+                              _textController.text,
+                              double.parse(_textCalorias.text),
+                              double.parse(_textGrasas.text),
+                              double.parse(_textGrasas.text),
+                              _esVegano,
+                              nivelDificultad.round(),
+                              ingredientes,
+                            ),
+                            actualizarEstado
+                          ]
                         );
                       }
                     },
@@ -289,6 +292,12 @@ class _EditorState extends State<Editor> {
         ),
       ),
     );
+  }
+  void actualizarEstado() {
+    // Limpia los ingredientes
+    ingredientes.clear();
+    // Redibujamos
+    setState(() {});
   }
 }
 
