@@ -34,6 +34,7 @@ class _EditorState extends State<Editor> {
   };
 
   double sliderValue = 0;
+  double nivelDificultad = 1;
 
   @override
   void initState() {
@@ -210,22 +211,76 @@ class _EditorState extends State<Editor> {
                         onPressed: () => {
                           /* Si los campos son correctos, sobre todo los que corresponde al
                                ingrediente, se añade a la lista */
-                          if (_formKey.currentState!.validate())
-                            {
-                              setState(() {
-                                ingredientes.add(
-                                  Ingrediente(
-                                    _textIngrediente.text,
-                                    _textCantidadGramos.text as double,
-                                  ),
-                                );
-                              }),
-                            },
+                          setState(() {
+                            ingredientes.add(
+                              Ingrediente(
+                                _textIngrediente.text,
+                                double.parse(_textCantidadGramos.text),
+                              ),
+                            );
+                            print("Ingredientes actuales: $ingredientes");
+                          }),
                         },
                         icon: Icon(Icons.add),
                       ),
                       SizedBox(width: 1),
                     ],
+                  ),
+                  ListView.separated(
+                    /* -> shrinkWrap a true hace el ListView ocupe lo que ocupen sus hijos
+                     no todo lo que pueda */
+                    shrinkWrap: true,
+                    /* Esto hace que la lista por sí sola no se scrollable, de eso
+                     ya se encarga el padre, de lo contrario explotaría */
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(ingredientes.elementAt(index).nombre),
+                        trailing: Icon(Icons.check),
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        Divider(color: Colors.white),
+                    itemCount: ingredientes.length,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+                    child: Column(
+                      children: [
+                        Text("Nivel de dificultad"),
+                        Slider(
+                          value: nivelDificultad,
+                          onChanged: (value) => setState(() {
+                            nivelDificultad = value;
+                          }),
+                          min: 1,
+                          max: 5,
+                          divisions: 5,
+                          label: nivelDificultad.round().toString(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Creamos la receta pasándola como argumentos a la pantalla final
+                        Navigator.pushNamed(
+                          context,
+                          "/resumen",
+                          arguments: Receta(
+                            _textController.text,
+                            double.parse(_textCalorias.text),
+                            double.parse(_textGrasas.text),
+                            double.parse(_textGrasas.text),
+                            _esVegano,
+                            nivelDificultad.round(),
+                            ingredientes,
+                          ),
+                        );
+                      }
+                    },
+                    child: Text("Guardar"),
                   ),
                 ],
               ),

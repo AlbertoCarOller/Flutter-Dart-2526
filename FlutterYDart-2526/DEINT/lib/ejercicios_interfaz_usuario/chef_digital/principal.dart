@@ -1,4 +1,5 @@
 import 'package:deint/ejercicios_interfaz_usuario/chef_digital/editor.dart';
+import 'package:deint/ejercicios_interfaz_usuario/chef_digital/resumen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,8 @@ class Principal extends StatelessWidget {
       title: "Principal",
       initialRoute: "/",
       routes: {
-        "/": (context) => Editor()
+        "/": (context) => Editor(),
+        "/resumen": (context) => Resumen()
       },
     );
   }

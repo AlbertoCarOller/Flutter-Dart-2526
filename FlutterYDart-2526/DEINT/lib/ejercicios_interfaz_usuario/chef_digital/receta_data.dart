@@ -3,6 +3,11 @@ class Ingrediente {
   double cantidadGramos;
 
   Ingrediente(this.nombre, this.cantidadGramos);
+
+  @override
+  String toString() {
+    return 'Ingrediente{nombre: $nombre, cantidadGramos: $cantidadGramos}';
+  }
 }
 
 class Receta {
