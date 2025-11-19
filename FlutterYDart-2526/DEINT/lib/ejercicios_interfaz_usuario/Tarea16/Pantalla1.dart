@@ -15,7 +15,7 @@ class Pantalla1 extends StatelessWidget {
                   crossAxisCount: 4,
                   mainAxisSpacing: 2,
                   crossAxisSpacing: 2,
-                  childAspectRatio: 1,
+                  childAspectRatio: 1, // -> La proporción ancho/alto, 1 es cuadrado perfecto
                   children: List<Widget>.generate(16, (index) {
                     return Container(color: Colors.amber);
                   }),
