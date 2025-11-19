@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:deint/ejercicios_interfaz_usuario/chef_digital/receta_data.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +32,8 @@ class _EditorState extends State<Editor> {
     "Grasas": _textGrasas,
     "Proteinas": _textProteinas,
   };
+
+  double sliderValue = 0;
 
   @override
   void initState() {
@@ -89,9 +89,55 @@ class _EditorState extends State<Editor> {
         child: SingleChildScrollView(
           controller: _scrollState,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Container(
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  top: 40,
+                  bottom: 30,
+                ),
+                // FormField, es mejor inferirle el tipo
+                child: FormField<double>(
+                  initialValue: sliderValue, // -> Para darle el valor incicial
+                  builder: (field) {
+                    return Column(
+                      children: [
+                        Text("Nivel de hambre"),
+                        Slider(
+                          label: sliderValue.round().toString(),
+                          max: 100,
+                          min: 0,
+                          divisions: 10,
+                          onChanged: (value) {
+                            setState(() {
+                              sliderValue = value;
+                            });
+                            /* .didChange(nuevoValor) -> Se usa para pasarle el
+                             valor al FormField, este comprobará que funciona */
+                            field.didChange(value);
+                          },
+                          value: sliderValue,
+                        ),
+                        // Validamos si el slider es correcto
+                        if (field.hasError)
+                          Text(
+                            field.errorText!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                      ],
+                    );
+                  },
+                  // Validamos que no pueda ser menor a
+                  validator: (value) {
+                    if (value! <= 10) {
+                      return "El valor debe ser mayor a 10";
+                    }
+                    return null;
+                  },
+                ),
+              ),
               Container(
                 padding: EdgeInsets.all(10),
                 child: TextFormField(
@@ -122,13 +168,9 @@ class _EditorState extends State<Editor> {
                       in _mapaText.entries)
                     Expanded(
                       flex: 1,
-                      child: TextFormField(
+                      child: TextFieldPersonalizado(
+                        texto: e.key,
                         controller: e.value,
-                        decoration: InputDecoration(label: Text(e.key)),
-                        // Utilizamos el keyboard numérico con decimales
-                        keyboardType: TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
                       ),
                     ),
                   SizedBox(width: 1),
@@ -144,7 +186,7 @@ class _EditorState extends State<Editor> {
                       SizedBox(width: 1),
                       Expanded(
                         flex: 1,
-                        child: TextField(
+                        child: TextFieldPersonalizado(
                           texto: "Cantidad en gramos",
                           controller: _textCantidadGramos,
                         ),
@@ -166,18 +208,19 @@ class _EditorState extends State<Editor> {
                       ),
                       IconButton(
                         onPressed: () => {
-                          setState(() {
-                            /* Si los campos son correctos, sobre todo los que corresponde al
+                          /* Si los campos son correctos, sobre todo los que corresponde al
                                ingrediente, se añade a la lista */
-                            if (_formKey.currentState!.validate()) {
-                              ingredientes.add(
-                                Ingrediente(
-                                  _textIngrediente.text,
-                                  _textCantidadGramos.text as double,
-                                ),
-                              );
-                            }
-                          }),
+                          if (_formKey.currentState!.validate())
+                            {
+                              setState(() {
+                                ingredientes.add(
+                                  Ingrediente(
+                                    _textIngrediente.text,
+                                    _textCantidadGramos.text as double,
+                                  ),
+                                );
+                              }),
+                            },
                         },
                         icon: Icon(Icons.add),
                       ),
@@ -194,11 +237,15 @@ class _EditorState extends State<Editor> {
   }
 }
 
-class TextField extends StatelessWidget {
+class TextFieldPersonalizado extends StatelessWidget {
   final String texto;
   final TextEditingController controller;
 
-  const TextField({super.key, required this.texto, required this.controller});
+  const TextFieldPersonalizado({
+    super.key,
+    required this.texto,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
