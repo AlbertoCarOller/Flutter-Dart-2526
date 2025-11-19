@@ -1,5 +1,5 @@
-import 'package:deint/bestiario_mistico/bestiario_data.dart';
 import 'package:flutter/material.dart';
+import 'bestiario_data.dart';
 
 class Bestiario extends StatefulWidget {
   const Bestiario({super.key});

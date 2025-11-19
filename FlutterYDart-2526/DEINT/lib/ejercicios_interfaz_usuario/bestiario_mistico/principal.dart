@@ -1,5 +1,5 @@
-import 'package:deint/bestiario_mistico/bestiario.dart';
-import 'package:deint/bestiario_mistico/crear_bestia.dart';
+import 'package:deint/ejercicios_interfaz_usuario/bestiario_mistico/bestiario.dart';
+import 'package:deint/ejercicios_interfaz_usuario/bestiario_mistico/crear_bestia.dart';
 import 'package:flutter/material.dart';
 
 void main() {

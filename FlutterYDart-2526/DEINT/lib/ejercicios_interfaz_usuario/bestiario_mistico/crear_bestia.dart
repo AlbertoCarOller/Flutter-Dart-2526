@@ -1,5 +1,7 @@
-import 'package:deint/bestiario_mistico/bestiario_data.dart';
+import 'package:deint/ejercicios_interfaz_usuario/bestiario_mistico/crear_bestia.dart';
 import 'package:flutter/material.dart';
+
+import 'bestiario_data.dart';
 
 class CrearBestia extends StatefulWidget {
   const CrearBestia({super.key});
