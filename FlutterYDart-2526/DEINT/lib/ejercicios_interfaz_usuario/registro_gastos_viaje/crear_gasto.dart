@@ -84,7 +84,10 @@ class _CrearGastoState extends State<CrearGasto> {
                     for (String s in GastoDataBase.categoriasDisponibles.keys)
                       ListTile(
                         title: Text(s.toUpperCase()),
-                        leading: Radio<String>(value: s),
+                        leading: Radio<String>(
+                          value: s,
+                          activeColor: Colors.lime.shade600,
+                        ),
                       ),
                   ],
                 ),

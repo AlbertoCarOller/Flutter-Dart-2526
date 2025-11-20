@@ -37,6 +37,15 @@ class _ListaGastosState extends State<ListaGastos> {
                         .elementAt(index)
                         .categoria],
                 trailing: IconButton(
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.red.shade300,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.horizontal(
+                        right: Radius.circular(15),
+                        left: Radius.circular(60),
+                      ),
+                    ),
+                  ),
                   onPressed: () {
                     setState(() {
                       ScaffoldMessenger.of(context).showSnackBar(
