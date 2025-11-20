@@ -53,6 +53,28 @@ class _FiltroState extends State<Filtro> {
                   },
                   title: Text(e.key.toUpperCase()),
                 ),
+              SizedBox(height: 10),
+              Divider(color: Colors.white, height: 10),
+              SizedBox(height: 10),
+              RadioGroup<Categoria>(
+                onChanged: (value) {
+                  setState(() {
+                    FiltroHotel.categoria = value;
+                  });
+                },
+                groupValue: FiltroHotel.categoria,
+                child: Column(
+                  children: [
+                    for (Categoria categoria in Categoria.values)
+                      ListTile(
+                        title: Text(categoria.name.toUpperCase()),
+                        trailing: Radio<Categoria>(value: categoria),
+                      ),
+                  ],
+                ),
+              ),
+              ElevatedButton(onPressed: () {
+              }, child: Text("Guardar"))
             ],
           ),
         ),
