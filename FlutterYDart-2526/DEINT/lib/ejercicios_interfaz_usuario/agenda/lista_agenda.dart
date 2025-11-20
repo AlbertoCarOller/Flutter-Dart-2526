@@ -1,4 +1,4 @@
-import 'package:deint/ejercicios_interfaz_usuario/galeria_de_fotos/agenda_data_base.dart';
+import 'package:deint/ejercicios_interfaz_usuario/agenda/agenda_data_base.dart';
 import 'package:flutter/material.dart';
 
 class ListaAgenda extends StatefulWidget {
@@ -32,7 +32,6 @@ class _ListaAgendaState extends State<ListaAgenda> {
                   },
                   icon: Icon(Icons.restore_from_trash_outlined),
                 ),
-                focusColor: ElementoDataBase.elementos.elementAt(index).color,
                 title: Text(ElementoDataBase.elementos.elementAt(index).nombre),
                 subtitle: Text(
                   "${ElementoDataBase.elementos.elementAt(index).telefono}",

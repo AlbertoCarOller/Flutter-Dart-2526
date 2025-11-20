@@ -1,4 +1,4 @@
-import 'package:deint/ejercicios_interfaz_usuario/galeria_de_fotos/agenda_data_base.dart';
+import 'package:deint/ejercicios_interfaz_usuario/agenda/agenda_data_base.dart';
 import 'package:flutter/material.dart';
 
 class Crear extends StatefulWidget {
@@ -13,6 +13,20 @@ class _CrearState extends State<Crear> {
   final _textNombre = TextEditingController();
   final _textNumTelefono = TextEditingController();
   Color? grupoColores;
+
+  @override
+  void initState() {
+    super.initState();
+    _textNombre.addListener(() => print(_textNombre.text));
+    _textNumTelefono.addListener(() => print(_textNombre.text));
+  }
+
+  @override
+  void dispose() {
+    _textNombre.dispose();
+    _textNumTelefono.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
