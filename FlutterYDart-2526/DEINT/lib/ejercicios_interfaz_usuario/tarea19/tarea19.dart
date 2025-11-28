@@ -35,13 +35,15 @@ class _TareasBorrarState extends State<TareasBorrar> {
             // Función para el borrado
             onDismissed: (direction) {
               setState(() {
+                // Se borra si la direción es de izquierda a derecha, en este caso no es necesaria la comprobación
                 if (direction == DismissDirection.endToStart) {
                   _listaTareas.removeAt(index);
                 }
               });
             },
             background: Container(color: Colors.red),
-            /*direction: DismissDirection.endToStart,*/
+            // direction -> Para obligarle a que solo tenga una dirección
+            direction: DismissDirection.endToStart,
             key: /*UniqueKey() -> Key única que genera flutter, vamos a poner una clave
             que sea directamente el elemento para que no dé error, si ponemos un int da 
             error*/ ValueKey(

@@ -42,7 +42,7 @@ class _ListaElementosState extends State<ListaElementos> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.separated(
-        // IMPORTANTE delta DEVUELVE EL TIEMPO DE PULSACIÓN
+        // IMPORTANTE delta ES LA ACUMULACIÓN DE PÍXELES
         itemBuilder: (context, index) {
           // IMPORTANTE: EL ÍNDICE DEL USUARIO NO PUEDE SER NUNCA MENOR A 0 AL COMIENZO
           return GestureDetector(
