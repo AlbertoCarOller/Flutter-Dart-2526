@@ -61,7 +61,7 @@ class _ListaElementosState extends State<ListaElementos> {
             * ya que 0 es la posición inical, izquierda números negativos y derecha
             * números positivos como el eje x */
             onHorizontalDragUpdate: (details) {
-              if ((details.localPosition.dx - indexUser) /*< -100*/ > 150) {
+              if ((details.localPosition.dx - indexUser) /*< -100*/ < -150) {
                 setState(() {
                   indexContainer = index;
                 });
