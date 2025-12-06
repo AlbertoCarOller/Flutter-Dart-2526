@@ -30,6 +30,13 @@ class _NuevoState extends State<Nuevo> {
   // Guardamos la categoría seleccionada
   Categoria? grupoValores;
 
+  // Creamos un map con las etiquetas disponibles y si está seleccionada o no
+  Map<String, bool> etiquetas = {
+    "Nuevo": false,
+    "Fragil": false,
+    "Importado": false,
+  };
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +71,10 @@ class _NuevoState extends State<Nuevo> {
                 for (MapEntry<String, TextEditingController> e
                     in _mapTextControllers.entries)
                   CampoPersonalizado(textController: e.value, label: e.key),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Text("Seleccione la categoría"),
+                ),
                 RadioGroup<Categoria>(
                   groupValue: grupoValores,
                   onChanged: (value) {
@@ -95,6 +106,22 @@ class _NuevoState extends State<Nuevo> {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Text("Seleccione las etiquetas"),
+                ),
+                for (MapEntry<String, bool> et in etiquetas.entries)
+                  ListTile(
+                    title: Text(et.key),
+                    trailing: Checkbox(
+                      value: et.value,
+                      onChanged: (value) {
+                        setState(() {
+                          etiquetas[et.key] = value!;
+                        });
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
@@ -126,7 +153,7 @@ class CampoPersonalizado extends StatelessWidget {
       decoration: InputDecoration(
         label: Text(label),
         border: OutlineInputBorder(),
-        enabledBorder: UnderlineInputBorder()
+        enabledBorder: UnderlineInputBorder(),
       ),
       validator: (value) {
         if (label == "Precio") {
