@@ -37,6 +37,12 @@ class _NuevoState extends State<Nuevo> {
     "Importado": false,
   };
 
+  // Creamos una variable que va a almacenar el stock del producto
+  int stock = 0;
+
+  // Creamos una varible para saber si está en oferta o no el producto
+  bool enOferta = false;
+
   @override
   void initState() {
     super.initState();
@@ -57,8 +63,32 @@ class _NuevoState extends State<Nuevo> {
 
   @override
   Widget build(BuildContext context) {
+    // Nos traemos de la función para pasarla al navegar hacia atrás y actualizar la pantalla
+    Function() function =
+        ModalRoute.of(context)!.settings.arguments as Function();
     return Scaffold(
-      appBar: AppBar(title: Text("Nuevo")),
+      appBar: AppBar(
+        title: Text("Nuevo"),
+        actions: [
+          // Para cambiar si el producto está en oferta o no
+          Row(
+            children: [
+              Text("En oferta"),
+              Switch(
+                activeThumbColor: Colors.orange.shade900,
+                activeThumbImage: AssetImage("/images/disco.png"),
+                inactiveThumbImage: AssetImage("/images/disco.png"),
+                value: enOferta,
+                onChanged: (value) {
+                  setState(() {
+                    enOferta = value;
+                  });
+                },
+              ),
+            ],
+          )
+        ],
+      ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -101,7 +131,10 @@ class _NuevoState extends State<Nuevo> {
                       for (Categoria c in Categoria.values)
                         ListTile(
                           title: Text(c.name.toUpperCase()),
-                          trailing: Radio<Categoria>(value: c),
+                          trailing: Radio<Categoria>(
+                            value: c,
+                            activeColor: Colors.orange.shade700,
+                          ),
                         ),
                     ],
                   ),
@@ -114,6 +147,7 @@ class _NuevoState extends State<Nuevo> {
                   ListTile(
                     title: Text(et.key),
                     trailing: Checkbox(
+                      activeColor: Colors.orange.shade700,
                       value: et.value,
                       onChanged: (value) {
                         setState(() {
@@ -122,6 +156,66 @@ class _NuevoState extends State<Nuevo> {
                       },
                     ),
                   ),
+                // Creamos la sección del slider para seleccionar el stock del producto
+                Padding(
+                  padding: EdgeInsetsGeometry.only(top: 20),
+                  child: Column(
+                    children: [
+                      Text("Seleccione el stock del producto"),
+                      Slider(
+                        activeColor: Colors.orange.shade700,
+                        label: "${stock.toInt()}",
+                        max: 100,
+                        min: 0,
+                        divisions: 100,
+                        value: stock.toDouble(),
+                        onChanged: (value) {
+                          setState(() {
+                            stock = value.toInt();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsetsGeometry.only(top: 20),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.orange.shade700,
+                      backgroundColor: Colors.grey.shade200,
+                    ),
+                    onPressed:
+                        grupoValores != null &&
+                            etiquetas.entries
+                                .where((e) => e.value == true)
+                                .isNotEmpty
+                        ? () {
+                            // Comrprobamos que los campos sean válidos
+                            if (_formKey.currentState!.validate()) {
+                              // Creamos y guardamos el nuevo producto
+                              InventarioDataBase.addProducto(
+                                Producto(
+                                  _textNombre.text,
+                                  double.parse(_textPrecio.text),
+                                  stock,
+                                  grupoValores!,
+                                  enOferta,
+                                  etiquetas.entries
+                                      .where((e) => e.value == true)
+                                      .map((e) => e.key)
+                                      .toList(),
+                                  _texUrlImagen.text,
+                                ),
+                              );
+                              // Viajamos a la pantalla anterior
+                              Navigator.pop(context, function());
+                            }
+                          }
+                        : null,
+                    child: Text("Guardar"),
+                  ),
+                ),
               ],
             ),
           ),
@@ -145,34 +239,50 @@ class CampoPersonalizado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: label == "Precio"
-          ? TextInputType.number
-          : TextInputType.text,
-      controller: textController,
-      decoration: InputDecoration(
-        label: Text(label),
-        border: OutlineInputBorder(),
-        enabledBorder: UnderlineInputBorder(),
-      ),
-      validator: (value) {
-        if (label == "Precio") {
-          try {
-            int precio = int.parse(textController.text);
-            if (precio > 0) {
-              return "El precio debe ser mayor a 0";
+    return Card(
+      color: Colors.grey.shade300,
+      child: TextFormField(
+        keyboardType: label == "Precio"
+            ? TextInputType.number
+            : TextInputType.text,
+        controller: textController,
+        decoration: InputDecoration(
+          icon: label == "Nombre"
+              ? Icon(Icons.drive_file_rename_outline)
+              : label == "Precio"
+              ? Icon(Icons.euro)
+              : Icon(Icons.image),
+          // Le damos color de fondo
+          /*filled: true,
+          fillColor: Colors.grey.shade200,*/
+          label: Text(label),
+          // Quitamos los bordes
+          border: InputBorder.none,
+          /*border: OutlineInputBorder(
+            // Le damos un borde más redondeado
+            //borderRadius: BorderRadius.all(Radius.circular(5)),
+          ),*/
+          //enabledBorder: UnderlineInputBorder(),
+        ),
+        validator: (value) {
+          if (label == "Precio") {
+            try {
+              double precio = double.parse(textController.text);
+              if (precio < 0) {
+                return "El precio debe ser mayor a 0";
+              }
+              return null;
+            } on FormatException {
+              return "No es número";
+            }
+          } else {
+            if (textController.text.isEmpty) {
+              return "El campo no es válido";
             }
             return null;
-          } on FormatException {
-            return "No es número";
           }
-        } else {
-          if (textController.text.isEmpty) {
-            return "El campo no es válido";
-          }
-          return null;
-        }
-      },
+        },
+      ),
     );
   }
 }

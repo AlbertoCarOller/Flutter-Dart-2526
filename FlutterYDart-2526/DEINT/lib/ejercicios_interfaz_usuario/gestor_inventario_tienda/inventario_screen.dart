@@ -55,6 +55,8 @@ class _InventarioScreenState extends State<InventarioScreen> {
       body: GridView.builder(
         itemCount: InventarioDataBase.productos.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisSpacing: 2,
+          mainAxisSpacing: 2,
           crossAxisCount: 2,
         ),
         itemBuilder: (context, index) {
@@ -68,8 +70,8 @@ class _InventarioScreenState extends State<InventarioScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   duration: Duration(seconds: 3),
-                  action: SnackBarAction(label: "Cerrar", onPressed: () {}),
-                  backgroundColor: Colors.pink.shade500,
+                  action: SnackBarAction(label: "Cerrar", textColor: Colors.grey.shade700, onPressed: () {}),
+                  backgroundColor: Colors.orange.shade700,
                   content: Text(
                     "Producto: ${InventarioDataBase.productos.elementAt(index).nombre}",
                   ),
@@ -108,21 +110,13 @@ class _InventarioScreenState extends State<InventarioScreen> {
                     right: 5,
                     left: 5,
                     bottom: 5,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      controller: sc,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        // Recorremos todas las etiquetas del producto
-                        children: [
-                          for (String etiqueta
-                              in InventarioDataBase.productos
-                                  .elementAt(index)
-                                  .etiquetas)
-                            Text(etiqueta),
-                        ],
-                      ),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      InventarioDataBase.productos
+                          .elementAt(index)
+                          .categoria
+                          .name
+                          .toUpperCase(),
                     ),
                   ),
                 ],
