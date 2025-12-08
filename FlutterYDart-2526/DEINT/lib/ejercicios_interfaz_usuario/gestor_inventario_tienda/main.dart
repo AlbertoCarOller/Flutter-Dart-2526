@@ -1,3 +1,4 @@
+import 'package:deint/ejercicios_interfaz_usuario/gestor_inventario_tienda/detalles.dart';
 import 'package:deint/ejercicios_interfaz_usuario/gestor_inventario_tienda/inventario_screen.dart';
 import 'package:deint/ejercicios_interfaz_usuario/gestor_inventario_tienda/nuevo.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class Main extends StatelessWidget {
       routes: {
         "/": (context) => InventarioScreen(),
         "/nuevo": (context) => Nuevo(),
+        "/detalles": (context) => Detalles(),
       },
     );
   }

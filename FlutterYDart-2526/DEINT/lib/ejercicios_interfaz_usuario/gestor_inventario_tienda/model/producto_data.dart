@@ -35,11 +35,17 @@ class InventarioDataBase {
   /// por el nuevo también pasado por parámetros
   static updateProducto(Producto producto, Producto nuevoProdcuto) {
     // Obtenemos la posición del producto
-    int posicion = productos.indexOf(producto);
+    int posicion = obtenerIndex(producto);
     // Si se encuentra el producto entra
     if (posicion != -1) {
       // Actualizamos el producto localizado por el nuevo producto
       productos.replaceRange(posicion, posicion, [nuevoProdcuto]);
     }
+  }
+
+  /// Creamos una función que va a devolver el índice de
+  /// un producto concreto
+  static int obtenerIndex(Producto producto) {
+    return productos.indexOf(producto);
   }
 }

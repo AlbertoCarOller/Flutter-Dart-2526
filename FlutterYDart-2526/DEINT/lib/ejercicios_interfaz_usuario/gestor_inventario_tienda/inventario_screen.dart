@@ -63,7 +63,8 @@ class _InventarioScreenState extends State<InventarioScreen> {
           return GestureDetector(
             // Si se pulsa el producto se irá a la pantalla de detalles de ese producto
             onTap: () {
-              Navigator.pushNamed(context, "/detalles");
+              Navigator.pushNamed(context, "/detalles",
+                  arguments: [InventarioDataBase.productos.elementAt(index), reconstruirAlVolver]);
             },
             // Si se pulsa de forma continua el producto aparecerá un SnackBar
             onLongPress: () {
