@@ -14,7 +14,12 @@ class Pelicula {
   );
 }
 
-enum Formato { dosD, tresD, imax }
+// Enum con valor (REVISAR Y COMENTAR)
+enum Formato { dosD(0), tresD(2), imax(4);
+  final int precioExtra;
+
+  const Formato(this.precioExtra);
+}
 
 class Sala {
   static List<int> asientosVendidos = [];
