@@ -115,9 +115,9 @@ class _TermsConditionsState extends State<TermsConditions> {
                               DataAvatar.numOponentes = value.round();
                             });
                           },
-                          max: DataAvatar.rawData.length.toDouble() - 1,
+                          max: DataAvatar.rawData.length.toDouble(),
                           min: 1,
-                          divisions: DataAvatar.rawData.length - 1,
+                          divisions: DataAvatar.rawData.length,
                         ),
                       ),
                     ],

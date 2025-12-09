@@ -3,7 +3,6 @@ class Pelicula {
   List<String> horarios;
   double precioBase;
   bool estreno;
-  Formato formato;
   String imagen;
 
   Pelicula(
@@ -11,7 +10,6 @@ class Pelicula {
     this.horarios,
     this.precioBase,
     this.estreno,
-    this.formato,
     this.imagen,
   );
 }
@@ -41,7 +39,6 @@ class Cartelera {
       ["16:00", "21:00"],
       7,
       false,
-      Formato.dosD,
       "/images/cine_cartelera/starwars.jpg",
     ),
     Pelicula(
@@ -49,7 +46,6 @@ class Cartelera {
       ["12:00", "20:00"],
       12,
       false,
-      Formato.tresD,
       "/images/cine_cartelera/laFormaDelAgua.jpg",
     ),
     Pelicula(
@@ -57,23 +53,20 @@ class Cartelera {
       ["20:30"],
       15,
       true,
-      Formato.imax,
-      "/images/cine_cartelera/4fantasticos",
+      "/images/cine_cartelera/4fantasticos.jpg",
     ),
     Pelicula(
       "Avengers Domsday",
       ["22:00", "16:45"],
       17,
       true,
-      Formato.imax,
-      "/images/cine_cartelera/avengersDomsday",
+      "/images/cine_cartelera/avengersDomsday.jpg",
     ),
     Pelicula(
       "El Laberinto de Fauno",
       ["18:20"],
       5,
       false,
-      Formato.dosD,
       "/images/cine_cartelera/elLaberientoDelFauno.jpg",
     ),
     Pelicula(
@@ -81,9 +74,21 @@ class Cartelera {
       ["12:00", "9:00"],
       7,
       true,
-      Formato.tresD,
       "/images/cine_cartelera/falloutPoster.jpeg",
     ),
-    Pelicula(titulo, horarios, precioBase, estreno, formato, imagen)
+    Pelicula(
+      "Harry Potter",
+      ["19:25", "15:30"],
+      2,
+      false,
+      "/images/cine_cartelera/harryPotter.jpeg",
+    ),
+    Pelicula(
+      "Stranger Things 5",
+      ["12:00"],
+      20,
+      true,
+      "/images/cine_cartelera/strangerThings5.jpg",
+    ),
   ];
 }
