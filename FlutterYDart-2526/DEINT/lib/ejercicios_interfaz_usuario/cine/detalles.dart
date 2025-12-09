@@ -18,6 +18,9 @@ class _DetallesState extends State<Detalles> {
   // Grupo de valores para el formato
   Formato? grupoValores;
 
+  // Guardamos el índice seleccionado por el usuario (horario)
+  int indexHorario = -1;
+
   @override
   void initState() {
     super.initState();
@@ -59,10 +62,13 @@ class _DetallesState extends State<Detalles> {
                 ),
               ),
               Divider(color: Colors.black),
-              Text("Formato", style: GoogleFonts.acme(
-                fontWeight: FontWeight.bold,
-                color: Colors.red.shade900
-              ),),
+              Text(
+                "Formato",
+                style: GoogleFonts.acme(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red.shade900,
+                ),
+              ),
               RadioGroup(
                 groupValue: grupoValores,
                 onChanged: (value) {
@@ -84,9 +90,50 @@ class _DetallesState extends State<Detalles> {
                   },
                 ),
               ),
-              ListView.builder(itemBuilder: (context, index) {
-                return ListTile();
-              },)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  "Horario",
+                  style: GoogleFonts.acme(
+                    color: Colors.red.shade900,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: widget.pelicula.horarios.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: indexHorario != index
+                        ? Colors.grey.shade300
+                        : Colors.green.shade300,
+                    child: ListTile(
+                      title: Text(
+                        widget.pelicula.horarios.elementAt(index),
+                        style: GoogleFonts.acme(),
+                      ),
+                      trailing: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            indexHorario = index;
+                          });
+                        },
+                        onLongPress: () {
+                          setState(() {
+                            indexHorario = -1;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey.shade300,
+                          foregroundColor: Colors.red.shade900,
+                        ),
+                        child: Text("Seleccionar"),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
