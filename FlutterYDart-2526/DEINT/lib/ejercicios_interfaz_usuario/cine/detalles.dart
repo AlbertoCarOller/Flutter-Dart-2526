@@ -21,6 +21,12 @@ class _DetallesState extends State<Detalles> {
   // Guardamos el índice seleccionado por el usuario (horario)
   int indexHorario = -1;
 
+  // Creamos una lista de extras
+  Map<List<dynamic>, bool> extras = {
+    ["Añadir Palomitas", 3]: false,
+    ["Añadir Refresco", 2]: false,
+  };
+
   @override
   void initState() {
     super.initState();
@@ -125,12 +131,21 @@ class _DetallesState extends State<Detalles> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey.shade300,
+                          backgroundColor: Colors.grey.shade500,
                           foregroundColor: Colors.red.shade900,
                         ),
                         child: Text("Seleccionar"),
                       ),
                     ),
+                  );
+                },
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: extras.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    // TODO: implementar la lista de extras
                   );
                 },
               ),
