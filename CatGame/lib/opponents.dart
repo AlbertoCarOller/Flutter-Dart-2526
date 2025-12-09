@@ -51,7 +51,19 @@ class _OpponentsState extends State<Opponents> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),
-            child: Text("${oponentesList.length}/6"),
+            child: TextButton(
+              onPressed: oponentesList.isNotEmpty
+                  ? () {
+                      DataAvatar.numOponentesSeleccionados =
+                          oponentesList.length;
+                      Navigator.pushNamed(context, "/glassGame");
+                    }
+                  : null,
+              child: Text(
+                "${oponentesList.length}/6",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
           ),
         ],
       ),
@@ -70,7 +82,8 @@ class _OpponentsState extends State<Opponents> {
                     // Se selecciona un personaje
                     onTap: () {
                       // Si hay menos de 6 elementos se puede añadir un oponente
-                      if (oponentesList.length < 6) {
+                      if (oponentesList.length < 6 &&
+                          !oponentesList.contains(oponentes.elementAt(i))) {
                         setState(() {
                           // Se añade a la lista de oponentes que van a pasar el oponente seleccionado
                           oponentesList.add(oponentes.elementAt(i));
@@ -97,8 +110,10 @@ class _OpponentsState extends State<Opponents> {
                       // Si contiene el oponente entra
                       if (oponentesList.contains(oponentes.elementAt(i))) {
                         setState(() {
+                          // Buscamos el índice del oponente a eliminar
+                          int indexToDelete = oponentesList.indexOf(oponentes.elementAt(i));
                           // Eliminamos el oponente
-                          oponentesList.removeAt(i);
+                          oponentesList.removeAt(indexToDelete);
                         });
                       }
                     },
@@ -180,22 +195,12 @@ class _OpponentsState extends State<Opponents> {
             ),
           ),
           Container(
+            alignment: Alignment.center,
             padding: EdgeInsetsGeometry.only(top: 10),
             width: 200,
             height: 40,
             child: oponentesList.length == 6
-                ? TextButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade300,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/glassGame");
-                    },
-                    child: Text(
-                      "Here we go!!",
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  )
+                ? Text("Here we go!!", style: TextStyle(color: Colors.blue))
                 : null,
           ),
         ],

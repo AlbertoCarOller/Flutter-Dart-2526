@@ -334,11 +334,14 @@ class DataAvatar {
     }).toList();
   }
 
-  // Guaramos el número de oponentes
+  // Guardamos el número de oponentes elegidos en términos y condiciones
   static int numOponentes = 1;
 
   // Guardamos el índice del avatar elegido por el usuario
   static int indexElegido = -1;
+
+  // Guardamos el número de oponentes elegidos en la pantalla de oponentes
+  static int numOponentesSeleccionados = 0;
 
   // Hacemos una función que va a devolver una lista de avatares disponibles para elegir oponentes
   static List<Avatar> obtenerOponentes() {
@@ -358,5 +361,12 @@ class DataAvatar {
       lista.add(r.nextInt(2));
     }
     return lista;
+  }
+
+  // Devolvemos el número de vidas que va a tener el usuario de 1 al número de oponentes que ha seleccionado
+  static int generarVidas() {
+    Random r = Random();
+    int numGenerado = r.nextInt(numOponentesSeleccionados);
+    return numGenerado == 0 ? 1 : numGenerado;
   }
 }

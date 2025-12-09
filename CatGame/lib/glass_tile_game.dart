@@ -10,6 +10,8 @@
 [] TODO: Mi código es legible y está bien comentando.
  */
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_cat_game/data/data_avatar.dart';
 
@@ -28,8 +30,8 @@ class _GlassTileGameState extends State<GlassTileGame> {
   // Guardamos los números aleatorios para saber los que están rotos
   List<int> columnasRotas = DataAvatar.generarCristales();
 
-  // Guardamos las vidas del usuario, en este caso tendrá 5 vidas
-  int vidas = 5;
+  // Guardamos las vidas del usuario, en este caso tendrá las vidas que se han generado aleatoriamente
+  int vidas = DataAvatar.generarVidas();
 
   // Creamos un índice global real del usuario, que se reinicie
   int indexUserRecord = 0;

@@ -53,7 +53,7 @@ class _SelectAvatarState extends State<SelectAvatar> {
         ],
       ),
       body: GridView.builder(
-        itemCount: DataAvatar.rawData.length,
+        itemCount: DataAvatar.numOponentes,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           mainAxisExtent: 128,
           crossAxisSpacing: 10,
