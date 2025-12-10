@@ -28,7 +28,12 @@ class _DetallesState extends State<Detalles> {
   };
 
   // Creamos una lista con los títulos de cada sección
-  List<String> titulosSeccion = ["Formato", "Horario", "Extras", "Pasos finales"];
+  List<String> titulosSeccion = [
+    "Formato",
+    "Horario",
+    "Extras",
+    "Pasos finales",
+  ];
 
   @override
   void initState() {
@@ -135,7 +140,22 @@ class _DetallesState extends State<Detalles> {
                 itemCount: extras.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    // TODO: implementar la lista de extras
+                    title: Text(
+                      "${extras.entries.elementAt(index).key.elementAt(0)}"
+                      " (${extras.entries.elementAt(index).key.elementAt(1)}€)",
+                      style: GoogleFonts.acme(),
+                    ),
+                    trailing: Checkbox(
+                      value: extras.entries.elementAt(index).value,
+                      onChanged: (value) {
+                        setState(() {
+                          extras[extras.entries.elementAt(index).key] = !extras
+                              .entries
+                              .elementAt(index)
+                              .value;
+                        });
+                      },
+                    ),
                   );
                 },
               ),
