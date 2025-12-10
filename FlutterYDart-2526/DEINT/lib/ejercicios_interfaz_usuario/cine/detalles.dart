@@ -27,6 +27,9 @@ class _DetallesState extends State<Detalles> {
     ["Añadir Refresco", 2]: false,
   };
 
+  // Creamos una lista con los títulos de cada sección
+  List<String> titulosSeccion = ["Formato", "Horario", "Extras", "Pasos finales"];
+
   @override
   void initState() {
     super.initState();
@@ -67,14 +70,7 @@ class _DetallesState extends State<Detalles> {
                   fontSize: 35,
                 ),
               ),
-              Divider(color: Colors.black),
-              Text(
-                "Formato",
-                style: GoogleFonts.acme(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red.shade900,
-                ),
-              ),
+              TituloSeccion(text: titulosSeccion.elementAt(0)),
               RadioGroup(
                 groupValue: grupoValores,
                 onChanged: (value) {
@@ -96,16 +92,7 @@ class _DetallesState extends State<Detalles> {
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  "Horario",
-                  style: GoogleFonts.acme(
-                    color: Colors.red.shade900,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              TituloSeccion(text: titulosSeccion.elementAt(1)),
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: widget.pelicula.horarios.length,
@@ -126,9 +113,11 @@ class _DetallesState extends State<Detalles> {
                           });
                         },
                         onLongPress: () {
-                          setState(() {
-                            indexHorario = -1;
-                          });
+                          if (indexHorario == index) {
+                            setState(() {
+                              indexHorario = -1;
+                            });
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey.shade500,
@@ -140,6 +129,7 @@ class _DetallesState extends State<Detalles> {
                   );
                 },
               ),
+              TituloSeccion(text: titulosSeccion.elementAt(2)),
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: extras.length,
@@ -152,6 +142,33 @@ class _DetallesState extends State<Detalles> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Esta función va a permitir crear una sección, con un divider, un tútulo
+/// y un padding, para así diferenciar unas secciones de otras
+class TituloSeccion extends StatelessWidget {
+  final String text;
+
+  const TituloSeccion({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        children: [
+          Divider(color: Colors.black),
+          Text(
+            text,
+            style: GoogleFonts.acme(
+              color: Colors.red.shade900,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
