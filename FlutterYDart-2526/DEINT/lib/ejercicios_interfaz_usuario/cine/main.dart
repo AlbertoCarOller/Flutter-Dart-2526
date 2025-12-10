@@ -1,3 +1,4 @@
+import 'package:deint/ejercicios_interfaz_usuario/cine/asientos.dart';
 import 'package:deint/ejercicios_interfaz_usuario/cine/cartelera_screen.dart';
 import 'package:deint/ejercicios_interfaz_usuario/cine/detalles.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class Main extends StatelessWidget {
           titleTextStyle: GoogleFonts.acme(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 30,
+            fontSize: 25,
           ),
         ),
       ),
@@ -38,6 +39,7 @@ class Main extends StatelessWidget {
               ModalRoute.of(context)!.settings.arguments as Pelicula;
           return Detalles(pelicula: pelicula);
         },
+        "/asientos": (context) => Asientos(),
       },
     );
   }

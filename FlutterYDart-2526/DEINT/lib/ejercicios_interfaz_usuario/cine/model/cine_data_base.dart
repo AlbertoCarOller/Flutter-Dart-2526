@@ -4,6 +4,7 @@ class Pelicula {
   double precioBase;
   bool estreno;
   String imagen;
+  Sala sala;
 
   Pelicula(
     this.titulo,
@@ -11,6 +12,7 @@ class Pelicula {
     this.precioBase,
     this.estreno,
     this.imagen,
+    this.sala,
   );
 }
 
@@ -28,7 +30,13 @@ enum Formato {
 }
 
 class Sala {
-  static List<int> asientosVendidos = [];
+  // Una lista con los índices de los asientos vendidos
+  List<int> asientosVendidos = [];
+
+  // El número de asientos totales de la sala
+  int numAsientos;
+
+  Sala(this.numAsientos);
 }
 
 class Cartelera {
@@ -40,6 +48,7 @@ class Cartelera {
       7,
       false,
       "/images/cine_cartelera/starwars.jpg",
+      Sala(20),
     ),
     Pelicula(
       "La forma del Agua",
@@ -47,6 +56,7 @@ class Cartelera {
       12,
       false,
       "/images/cine_cartelera/laFormaDelAgua.jpg",
+      Sala(30),
     ),
     Pelicula(
       "Los 4 fantásticos",
@@ -54,6 +64,7 @@ class Cartelera {
       15,
       true,
       "/images/cine_cartelera/4fantasticos.jpg",
+      Sala(30),
     ),
     Pelicula(
       "Avengers Domsday",
@@ -61,13 +72,15 @@ class Cartelera {
       17,
       true,
       "/images/cine_cartelera/avengersDomsday.jpg",
+      Sala(40),
     ),
     Pelicula(
-      "El Laberinto de Fauno",
+      "El Laberinto del Fauno",
       ["18:20"],
       5,
       false,
       "/images/cine_cartelera/elLaberientoDelFauno.jpg",
+      Sala(30),
     ),
     Pelicula(
       "Fallout Season 2",
@@ -75,6 +88,7 @@ class Cartelera {
       7,
       true,
       "/images/cine_cartelera/falloutPoster.jpeg",
+      Sala(35),
     ),
     Pelicula(
       "Harry Potter",
@@ -82,6 +96,7 @@ class Cartelera {
       2,
       false,
       "/images/cine_cartelera/harryPotter.jpeg",
+      Sala(25),
     ),
     Pelicula(
       "Stranger Things 5",
@@ -89,6 +104,7 @@ class Cartelera {
       20,
       true,
       "/images/cine_cartelera/strangerThings5.jpg",
+      Sala(30),
     ),
   ];
 }

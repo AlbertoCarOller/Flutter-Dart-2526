@@ -35,10 +35,18 @@ class _DetallesState extends State<Detalles> {
     "Pasos finales",
   ];
 
+  // Creamos una variable donde guardar el precio final
+  late double precioFinal;
+
+  // Creamos una nueva varible que va a ser el último formato elegido por el usuario
+  Formato? ultimoFormatoElegido;
+
   @override
   void initState() {
     super.initState();
     sc.addListener(() => print("${sc.position.pixels}"));
+    // Iniciamos el valor de comienzo de la varible 'precioFinal'
+    precioFinal = widget.pelicula.precioBase;
   }
 
   @override
@@ -81,6 +89,18 @@ class _DetallesState extends State<Detalles> {
                 onChanged: (value) {
                   setState(() {
                     grupoValores = value;
+                    // Comprobamos que el último formato no sea null y que sea distinto al elegido
+                    if (ultimoFormatoElegido != null &&
+                        ultimoFormatoElegido != grupoValores) {
+                      // Primero restamos el precio del último para volver al precio antes de elegir formato
+                      precioFinal -= ultimoFormatoElegido!.precioExtra;
+                      // Le sumamos el nuevo formato elegido
+                      precioFinal += grupoValores!.precioExtra;
+                    } else {
+                      precioFinal += grupoValores!.precioExtra;
+                    }
+                    // Le damos el último valor tras las comparaciones a nuestra variable 'ultimoFormatoElegido'
+                    ultimoFormatoElegido = grupoValores;
                   });
                 },
                 child: ListView.builder(
@@ -149,15 +169,60 @@ class _DetallesState extends State<Detalles> {
                       value: extras.entries.elementAt(index).value,
                       onChanged: (value) {
                         setState(() {
-                          extras[extras.entries.elementAt(index).key] = !extras
-                              .entries
-                              .elementAt(index)
-                              .value;
+                          extras[extras.entries.elementAt(index).key] = value!;
+                          // Sumamos al precio final
+                          if (value && index == 0) {
+                            precioFinal += 3;
+                          }
+                          if (value && index == 1) {
+                            precioFinal += 2;
+                          }
+                          if (!value &&
+                              widget.pelicula.precioBase != precioFinal) {
+                            if (index == 0) {
+                              precioFinal -= 3;
+                            }
+                            if (index == 1) {
+                              precioFinal -= 2;
+                            }
+                          }
                         });
                       },
                     ),
                   );
                 },
+              ),
+              TituloSeccion(text: titulosSeccion.elementAt(3)),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Precio final: $precioFinal€",
+                      style: GoogleFonts.acme(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade500,
+                        foregroundColor: Colors.red.shade900,
+                      ),
+                      onPressed: indexHorario != -1 && grupoValores != null
+                          ? () {
+                              Navigator.pushNamed(
+                                context,
+                                "/asientos",
+                                arguments: widget.pelicula,
+                              );
+                            }
+                          : null,
+                      child: Text("Elegir asiento"),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
