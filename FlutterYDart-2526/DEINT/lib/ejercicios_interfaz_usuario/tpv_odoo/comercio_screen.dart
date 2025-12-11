@@ -10,6 +10,7 @@ class ComercioScreen extends StatefulWidget {
 }
 
 class _ComercioScreenState extends State<ComercioScreen> {
+  // Creamos una varible que va a acumular el precio total de los productos seleccionados
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,18 +105,16 @@ class _ComercioScreenState extends State<ComercioScreen> {
             ),
           ),
           GestureDetector(
-            onTap: TPVData.productosSeleccionados.isNotEmpty
-                ? () {
-                    Navigator.pushNamed(context, "/total");
-                  }
-                : null,
+            onTap: () {
+              Navigator.pushNamed(context, "/total");
+            },
             child: Container(
               height: 30,
               width: double.infinity,
               alignment: Alignment.center,
-              child: Text("Terminar", style: GoogleFonts.aboreto(fontSize: 20)),
+              child: Text("Terminar", style: GoogleFonts.aboreto(fontSize: 20),),
             ),
-          ),
+          )
         ],
       ),
     );
