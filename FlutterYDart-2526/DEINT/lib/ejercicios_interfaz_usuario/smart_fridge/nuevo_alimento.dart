@@ -22,36 +22,85 @@ class _NuevoAlimentoState extends State<NuevoAlimento> {
   // Guardamos los días de caducidad del alimento que estamos creando
   int diasCaducidad = 1;
 
+  // Creamos un textEditingController para manejar el TextFormField de la cantidad del alimento
+  final _textControllerCantidad = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _textControllerName.addListener(() => print(_textControllerName.text));
+    _textControllerCantidad.addListener(() => print(_textControllerName.text));
   }
 
   @override
   void dispose() {
     _textControllerName.dispose();
+    _textControllerCantidad.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Traemos la función que va a actualizar el estado de la pantalla principal
+    Function() funcion =
+        ModalRoute.of(context)!.settings.arguments as Function();
     return Scaffold(
-      appBar: AppBar(title: Text("Crear nuevo alimento")),
+      appBar: AppBar(
+        title: Text("Crear nuevo alimento"),
+        actions: [
+          Theme(
+            data: Theme.of(context).copyWith(
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.teal.shade700,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            ),
+            child: Builder(
+              builder: (newContext) {
+                return ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate() &&
+                        indexCategoria != -1) {
+                      // Creamos el alimento temporal que se guardará en caso de que no exista
+                      Alimento alimentoTem = Alimento(
+                        _textControllerName.text,
+                        Categoria.values.elementAt(indexCategoria),
+                        double.parse(_textControllerCantidad.text),
+                        diasCaducidad,
+                      );
+                      // Guardamos el alimento en la lista, en caso de que no exista ya
+                      if (!Nevera.alimentos.contains(alimentoTem)) {
+                        Nevera.alimentos.add(alimentoTem);
+                      }
+                      Navigator.pop(context, funcion());
+                    }
+                  },
+                  child: Text("Guardar"),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       body: Form(
         key: _formKey,
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsetsGeometry.symmetric(
-                horizontal: 50,
-                vertical: 10,
-              ),
+              padding: EdgeInsetsGeometry.only(right: 50, left: 50, top: 50),
               child: Card(
                 color: Colors.teal.shade200,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "El nombre no es válido";
+                      }
+                      return null;
+                    },
                     controller: _textControllerName,
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -112,6 +161,38 @@ class _NuevoAlimentoState extends State<NuevoAlimento> {
                 });
               },
             ),
+            TituloSeccion(text: "Cantidad"),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 50),
+              child: Card(
+                color: Colors.teal.shade200,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: TextFormField(
+                    validator: (value) {
+                      try {
+                        double precioTemp = double.parse(value!);
+                        if (precioTemp <= 0) {
+                          return "El precio no es válido";
+                        }
+                      } on FormatException {
+                        return "No es un número";
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.number,
+                    controller: _textControllerCantidad,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      label: Text(
+                        "Cantidad (KG/L)",
+                        style: GoogleFonts.outfit(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -129,7 +210,7 @@ class TituloSeccion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 50),
       child: Column(
         children: [
           Divider(color: Colors.black),

@@ -22,6 +22,16 @@ class Alimento {
   int diasParaCaducar;
 
   Alimento(this.nombre, this.categoria, this.cantidad, this.diasParaCaducar);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Alimento &&
+          runtimeType == other.runtimeType &&
+          nombre == other.nombre;
+
+  @override
+  int get hashCode => nombre.hashCode;
 }
 
 class Nevera {

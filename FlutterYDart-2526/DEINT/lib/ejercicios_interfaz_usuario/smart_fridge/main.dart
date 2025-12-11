@@ -1,3 +1,4 @@
+import 'package:deint/ejercicios_interfaz_usuario/gestor_inventario_tienda/detalles.dart';
 import 'package:deint/ejercicios_interfaz_usuario/smart_fridge/nevera_screen.dart';
 import 'package:deint/ejercicios_interfaz_usuario/smart_fridge/nuevo_alimento.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class Main extends StatelessWidget {
       routes: {
         "/": (context) => NeveraScreen(),
         "/nuevo": (context) => NuevoAlimento(),
+        "/detalles": (context) => Detalles(),
       },
     );
   }
