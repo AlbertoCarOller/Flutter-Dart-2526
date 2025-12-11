@@ -5,6 +5,17 @@ class Producto {
   int cantidad = 0;
 
   Producto(this.nombre, this.precio, this.imagen);
+
+  // Es el equals como en Java, comparamos por nombre
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Producto &&
+          runtimeType == other.runtimeType &&
+          nombre == other.nombre;
+
+  @override
+  int get hashCode => nombre.hashCode;
 }
 
 class TPVData {
