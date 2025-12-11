@@ -1,4 +1,5 @@
-import 'package:deint/ejercicios_interfaz_usuario/smart_fridge/model/nevera_screen.dart';
+import 'package:deint/ejercicios_interfaz_usuario/smart_fridge/nevera_screen.dart';
+import 'package:deint/ejercicios_interfaz_usuario/smart_fridge/nuevo_alimento.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -26,7 +27,10 @@ class Main extends StatelessWidget {
         ),
       ),
       initialRoute: "/",
-      routes: {"/": (context) => NeveraScreen()},
+      routes: {
+        "/": (context) => NeveraScreen(),
+        "/nuevo": (context) => NuevoAlimento(),
+      },
     );
   }
 }
