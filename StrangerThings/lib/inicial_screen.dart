@@ -19,7 +19,7 @@ class _InicialScreenState extends State<InicialScreen> {
           Expanded(
             flex: 8,
             child: GestureDetector(
-              // Si se mantiene pulsada la imagen vamos a la lista de pesonajes
+              // Si se mantiene pulsada la imagen vamos a la lista de pesonajes (Otra pantalla)
               onLongPress: () {
                 Navigator.pushNamed(context, "/lab");
               },
