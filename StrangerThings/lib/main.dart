@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       textTheme: GoogleFonts.vt323TextTheme(),
       // Usar material 3
       useMaterial3: true,
-      // AppBar
+      // AppBarTheme
       appBarTheme: AppBarTheme(centerTitle: true),
     );
     return MaterialApp(
