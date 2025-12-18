@@ -40,6 +40,7 @@ dependencies:
 dev_dependencies:
   provider: ^6.0.5 # -> Añadimos el provider que va a permitir tener la clase ChangeNotifierProvider
   english_words: ^4.0.0 # -> Añadimos esto para tener una clase que tiene una función que genera pares de palabras en inglés
+  http: ^1.6.0 # -> Añadimos la dependencia de la conexión con APIs http
   flutter_test:
     sdk: flutter
 
