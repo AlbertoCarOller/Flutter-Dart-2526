@@ -103,19 +103,45 @@ class _ScreenLlamada2State extends State<ScreenLlamada2> {
                   style: TextStyle(fontSize: 20),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Text(
-                  informacionPokemon['name'] == null
-                      ? "Número de habilidades: No encontrado"
-                      : "Número de Habilidades: ${(informacionPokemon['abilities']).length}",
-                  style: TextStyle(fontSize: 20),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: informacionPokemon['name'] == null
+                      ? Text(
+                          "Habilidades: No encontradas",
+                          style: TextStyle(fontSize: 20),
+                        )
+                      : Column(
+                          children: [
+                            Text(
+                              "Habilidades:",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    color: Colors.red.shade100,
+                                    child: ListTile(
+                                      trailing: Icon(Icons.hdr_strong),
+                                      title: Text(
+                                        "${obtenerHabilidades(informacionPokemon['abilities']).elementAt(index)}",
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemCount: obtenerHabilidades(
+                                  informacionPokemon['abilities'],
+                                ).length,
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(
                   bottom: 20,
-                  top: 50,
                   left: 50,
                   right: 50,
                 ),
@@ -124,7 +150,10 @@ class _ScreenLlamada2State extends State<ScreenLlamada2> {
                   child: Card(
                     color: Colors.red.shade200,
                     child: TextFormField(
-                      decoration: InputDecoration(border: InputBorder.none),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        label: Text("Nombre"),
+                      ),
                       controller: _textNombre,
                       validator: (value) {
                         if (_textNombre.text.isEmpty) {
@@ -136,16 +165,19 @@ class _ScreenLlamada2State extends State<ScreenLlamada2> {
                   ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    // Cargamos los datos antes del setState() porque o si no carga bien
-                    informacionPokemon = await obtenerPokemon(_textNombre.text);
-                    // Los setState() async {} -> Hacen 'la foto' al momento, no esperan
-                    setState(() /*async*/ {});
-                  }
-                },
-                child: Text("Buscar", style: TextStyle(color: Colors.red),),
+              Padding(
+                padding: EdgeInsetsGeometry.only(bottom: 10),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      // Cargamos los datos antes del setState() porque o si no carga bien
+                      informacionPokemon = await obtenerPokemon(_textNombre.text);
+                      // Los setState() async {} -> Hacen 'la foto' al momento, no esperan
+                      setState(() /*async*/ {});
+                    }
+                  },
+                  child: Text("Buscar", style: TextStyle(color: Colors.red)),
+                ),
               ),
             ],
           ),
@@ -160,6 +192,15 @@ class _ScreenLlamada2State extends State<ScreenLlamada2> {
 /// futuro que no está claro (tiempo indeterminado), porque en hacer la petición puede tardar
 Future<Map> obtenerPokemon(String nombre) async {
   // Hacemos una peticón a la API con URL de un pokemon
-  http.Response response = await http.get(Uri.parse("https://pokeapi.co/api/v2/pokemon/$nombre"));
+  http.Response response = await http.get(
+    Uri.parse("https://pokeapi.co/api/v2/pokemon/$nombre"),
+  );
   return response.statusCode == 200 ? Map.of(jsonDecode(response.body)) : {};
+}
+
+/// Esta función va a devolver una lista con el nombre de cada habilidad,
+/// la lista que acepte debe ser dinámica ya que lo que obtenemos es un
+/// mapa dinámico al pasar la llamada de JSON a Map
+List obtenerHabilidades(List informacionPokemon) {
+  return informacionPokemon.map((e) => (e['ability'])['name']).toList();
 }
