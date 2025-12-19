@@ -191,10 +191,8 @@ class _ScreenLlamada2State extends State<ScreenLlamada2> {
 /// a la API de pokemon falla o un mapa con los datos del mismo en caso contrario, esto en un
 /// futuro que no está claro (tiempo indeterminado), porque en hacer la petición puede tardar
 Future<Map> obtenerPokemon(String nombre) async {
-  // Hacemos una peticón a la API con URL de un pokemon
-  http.Response response = await http.get(
-    Uri.parse("https://pokeapi.co/api/v2/pokemon/$nombre"),
-  );
+  // Hacemos una petición a la API con URL de un pokemon
+  http.Response response = await http.get(Uri.parse("https://pokeapi.co/api/v2/pokemon/$nombre"));
   return response.statusCode == 200 ? Map.of(jsonDecode(response.body)) : {};
 }
 
