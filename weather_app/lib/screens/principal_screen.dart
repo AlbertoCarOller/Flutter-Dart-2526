@@ -158,6 +158,7 @@ class _PrincipalScreenState extends State<PrincipalScreen> {
                                       : "Soleado")
                                 : "Por determinar",
                             style: TextStyle(fontSize: 20),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
@@ -167,7 +168,7 @@ class _PrincipalScreenState extends State<PrincipalScreen> {
               ),
               // Row donde van las 4 cards de información básica
               Padding(
-                padding: const EdgeInsets.only(bottom: 40),
+                padding: const EdgeInsets.only(bottom: 40, right: 22),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
