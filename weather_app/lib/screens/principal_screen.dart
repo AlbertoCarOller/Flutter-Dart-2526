@@ -184,6 +184,11 @@ class _PrincipalScreenState extends State<PrincipalScreen> {
                   ],
                 ),
               ),
+              Container(
+                padding: EdgeInsetsGeometry.only(right: 12),
+                alignment: Alignment.centerRight,
+                child: Text("Horas"),
+              ),
               // Este es el apartado donde aparecen las cards de las horas
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
