@@ -457,6 +457,7 @@ class CardHora extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
+            // La imagen
             Positioned(
               left: 2,
               right: 2,
@@ -470,6 +471,16 @@ class CardHora extends StatelessWidget {
                     ? "assets/images/nublado.png"
                     : "assets/images/soleado.png",
                 scale: 12,
+              ),
+            ),
+            // Los grados
+            Positioned(
+              right: 2,
+              left: 2,
+              bottom: 2,
+              child: Text(
+                "${weather.hourly!.temperature2M.elementAt(indexFor)}°C",
+                textAlign: TextAlign.center,
               ),
             ),
           ],
