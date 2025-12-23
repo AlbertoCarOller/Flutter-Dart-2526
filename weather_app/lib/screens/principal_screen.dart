@@ -440,7 +440,7 @@ class CardPersonalizada extends StatelessWidget {
               : indexFor == 1
               ? "${weather.hourly!.cloudCover.elementAt(indexUser)}%"
               : indexFor == 2
-              ? "${weather.hourly!.precipitationProbability.elementAt(indexUser)}"
+              ? "${weather.hourly!.precipitationProbability.elementAt(indexUser)}%"
               : "${weather.hourly!.windSpeed10M.elementAt(indexUser)} km/h",
         ),
       ],
