@@ -30,14 +30,14 @@ class _PrincipalScreenState extends State<PrincipalScreen> {
   // Creamos una vareiable donde vamos a guardar el nombre de la ubicación del usuario
   String? ubicaion;
 
-  // Creamos una variable que va a almacenar el nombre de la ciudad buscada por el usuario
-  String? ciudadPais;
-
-  // Creamos una variable que va a almacenar los datos de la API de la ubicación actual
+  // Creamos una variable que va a almacenar los datos de la API de la ubicación
   Weather? weather;
 
   // Creamos un índice, este recoge la hora seleccionada por el usuario
   int indexSeleccion = 0;
+
+  // Creamos un weather temporal que va a guardar lo que devuelva 'cargarWeatherExterior'
+  Weather? weatherTemporal;
 
   // Creamos un scrollController
   ScrollController sc = ScrollController();
@@ -76,7 +76,33 @@ class _PrincipalScreenState extends State<PrincipalScreen> {
             controller: _textUbicaion,
             decoration: InputDecoration(
               label: Text("Ciudad y país"),
-              icon: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+              icon: IconButton(
+                onPressed: () async {
+                  // Obtenemos la geolocalización de la ciudad buscada
+                  locationExterno = await obtenerGeolocalizacionCiudad(
+                    _textUbicaion.text,
+                  );
+                  // Comprobamos que 'locationExterno' no sea null
+                  if (locationExterno != null) {
+                    // En caso de que no sea null, cargamos el weather
+                    weatherTemporal = await cargarWeatherExterior(
+                      locationExterno!,
+                    );
+                    // En caso de que se cargue bien el temporal
+                    if (weatherTemporal != null) {
+                      // Obtenemos el nombre de la ciudad exterior
+                      ubicaion = await obtenerNombreCiudadExterior(
+                        locationExterno!,
+                      );
+                      // Lo cargamos en el weather real
+                      setState(() {
+                        weather = weatherTemporal;
+                      });
+                    }
+                  }
+                },
+                icon: Icon(Icons.search),
+              ),
             ),
           ),
         ),
@@ -313,6 +339,8 @@ Future<Position?> obtenerGeolocalizacionActual() async {
   return null;
 }
 
+/// Esta función va a obtener a partir de la latitud y longitud por un objeto Position
+/// el nombre de la ciudad (localidad)
 Future<String?> obtenerNombreCiudad(Position position) async {
   try {
     /* Obtenemos una lista de 'Placemark' que es un objeto que contiene
@@ -492,5 +520,44 @@ class CardHora extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Esta función va a devolver un objeto Weather que contiene la información
+/// del tiempo de la ubicación pasasda por el buscador
+Future<Weather?> cargarWeatherExterior(Location location) async {
+  try {
+    // Hacemos una petición a la API para obtener información en formato JSON
+    http.Response response = await http.get(
+      Uri.parse(
+        "https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}"
+        "&longitude=${location.longitude}&daily=temperature_2m_max,"
+        "temperature_2m_min&hourly=temperature_2m,precipitation_probability,"
+        "cloud_cover,wind_speed_10m&timezone=Europe%2FBerlin&forecast_days=1",
+      ),
+    );
+    // Devolvemos el objeto, con 'fromJson' el mapa lo transforma en el objeto
+    return Weather.fromJson(jsonDecode(response.body));
+  } catch (e) {
+    print("Error: $e");
+    return null;
+  }
+}
+
+/// Esta función va a obtener a partir de la latitud y longitud por un objeto Location
+/// el nombre de la ciudad (localidad)
+Future<String?> obtenerNombreCiudadExterior(Location location) async {
+  try {
+    /* Obtenemos una lista de 'Placemark' que es un objeto que contiene
+  * información sobre la ubicación, el más fiable suele ser siempre el primero de la lista */
+    List<Placemark> ubicacionEmpaquetada = await placemarkFromCoordinates(
+      location.latitude,
+      location.longitude,
+    );
+    // Devolvemos el nombre de la localidad
+    return ubicacionEmpaquetada.first.locality;
+  } catch (e) {
+    print("Error: $e");
+    return null;
   }
 }
