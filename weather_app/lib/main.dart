@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_app/screens/history_screen.dart';
 import 'package:weather_app/screens/principal_screen.dart';
 
 void main() {
@@ -13,12 +14,15 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true,
-      // Usamos la fuente que debemos para el texto de la app
-      textTheme: GoogleFonts.rubikTextTheme()),
+      theme: ThemeData(
+        useMaterial3: true,
+        // Usamos la fuente que debemos para el texto de la app
+        textTheme: GoogleFonts.rubikTextTheme(),
+      ),
       initialRoute: "/",
       routes: {
-        "/": (context) => PrincipalScreen()
+        "/": (context) => PrincipalScreen(),
+        "/history": (context) => HistoryScreen(),
       },
     );
   }

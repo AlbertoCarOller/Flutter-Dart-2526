@@ -8,6 +8,7 @@ import 'package:geocoding/geocoding.dart'; /* -> Importamos el paquete para obte
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart'
     as http; // -> Para acceder a las APIs, en este caso la del tiempo
+import 'package:weather_app/Data/weather_data.dart';
 import 'package:weather_app/model/weather.dart'; // Para obtener la ubicación actual
 
 class PrincipalScreen extends StatefulWidget {
@@ -67,7 +68,16 @@ class _PrincipalScreenState extends State<PrincipalScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.sunny_snowing),
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  "/history",
+                  arguments: cargarDatosHistorial,
+                );
+              },
+              icon: Icon(Icons.list),
+            ),
           ),
         ],
         title: SizedBox(
@@ -97,6 +107,8 @@ class _PrincipalScreenState extends State<PrincipalScreen> {
                       // Lo cargamos en el weather real
                       setState(() {
                         weather = weatherTemporal;
+                        // Guardamos la ubicación en el historial
+                        WeatherData.historialUbicaiones.add(_textUbicaion.text);
                       });
                     }
                   }
@@ -264,6 +276,28 @@ class _PrincipalScreenState extends State<PrincipalScreen> {
     }
     // Redibujamos la pantalla
     setState(() {});
+  }
+
+  /// Esta función va a cambiar el nombre de la ubicación y wl objeto
+  /// weather que contiene la información del tiempo por la información
+  /// de la ubicación del historial pasada por parámetros
+  Future<void> cargarDatosHistorial(String ubicacionHistorial) async {
+    // Cargamos el Location con el nombre de la ubicación del historial
+    locationExterno = await obtenerGeolocalizacionCiudad(ubicacionHistorial);
+    // EN caso de que el location sea distinto de null, entra
+    if (locationExterno != null) {
+      // Cambiamos el nombre de la ciudad que aparece
+      ubicaion = await obtenerNombreCiudadExterior(locationExterno!);
+      // Comprobamos que el weather sea distinto de null antes de realizar ningún cambio
+      weatherTemporal = await cargarWeatherExterior(locationExterno!);
+      // En caso de que el weather temporal sea distinto de null, entra
+      if (weatherTemporal != null) {
+        setState(() {
+          // Cambimos el weather antiguo por el nuevo obtenido del historial
+          weather = weatherTemporal;
+        });
+      }
+    }
   }
 }
 
