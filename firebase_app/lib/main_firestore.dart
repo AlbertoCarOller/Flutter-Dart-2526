@@ -45,7 +45,7 @@ class _FirestorePruebaState extends State<FirestorePrueba> {
       event.docs.forEach((element) {
         print("********************************");
         print(element.data());
-        // TODO: por mirar esto y la agregación y modificación de datos
+        // TODO: por mirar esto y la agregación y modificación de datos y ver que hace el get()
         listTile.add(ListTile(title: element.get("sender"),));
       });
     });
@@ -62,6 +62,7 @@ class _FirestorePruebaState extends State<FirestorePrueba> {
               child: Text("Obtener datos"),
             ),
             for (int i = 0; i < list.length; i++)
+              // Pasamos el mapa
               TextData(map: list.elementAt(i).data() as Map<String, dynamic>),
           ],
         ),
