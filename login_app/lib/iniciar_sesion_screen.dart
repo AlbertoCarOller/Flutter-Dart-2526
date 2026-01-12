@@ -95,7 +95,7 @@ class TextPersonsalizado extends StatelessWidget {
           }
         } else {
           if (value!.length < 8) {
-            return "La contraseña debe tener al menos 8 carcateres";
+            return "La contraseña debe tener al menos 6 carcateres";
           }
         }
         return null;
@@ -116,12 +116,8 @@ Future<UserCredential?> accederCuenta(String correo, String clave) async {
     );
     // El objeto que se devuelve son las credenciales del usuario
     return credential;
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      print('No se encuentra al usuario con este email.');
-    } else if (e.code == 'wrong-password') {
-      print('La contraseña no coincide.');
-    }
+  } catch (e) {
+    print("Error al iniciar sesión");
     return null;
   }
 }
