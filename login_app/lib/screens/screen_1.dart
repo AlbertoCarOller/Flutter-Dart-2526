@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/data/user_data.dart';
 
 class Screen1 extends StatefulWidget {
   const Screen1({super.key});
@@ -21,14 +22,23 @@ class _Screen1State extends State<Screen1> {
               padding: const EdgeInsets.only(bottom: 8),
               // Botón para iniciar sesión
               child: OutlinedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/inciar_sesion_screen");
-                },
+                onPressed: UserData.currentUser == null
+                    ? () {
+                        Navigator.pushNamed(context, "/iniciar_sesion_screen");
+                      }
+                    : null,
                 child: Text("Iniciar sesión"),
               ),
             ),
             // Botón para crear cuenta
-            OutlinedButton(onPressed: () {}, child: Text("Crear cuenta")),
+            OutlinedButton(
+              onPressed: UserData.currentUser == null
+                  ? () {
+                      Navigator.pushNamed(context, "/crear_cuenta_screen");
+                    }
+                  : null,
+              child: Text("Crear cuenta"),
+            ),
           ],
         ),
       ),
