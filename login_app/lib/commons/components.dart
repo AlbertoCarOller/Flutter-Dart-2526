@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 /// Esta función es TextFormField personalizado
@@ -19,6 +20,7 @@ class TextPersonsalizado extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: i == 1,
       controller: textEditingController,
       decoration: InputDecoration(
         label: Text(i == 0 ? "Correo" : "Contraseña"),
@@ -26,7 +28,8 @@ class TextPersonsalizado extends StatelessWidget {
       ),
       validator: (value) {
         if (i == 0) {
-          if (value!.isEmpty) {
+          // Utilizamos el paquete de EmailValidator para validar el formato
+          if (!EmailValidator.validate(value!)) {
             return "El correo no es válido";
           }
         } else {

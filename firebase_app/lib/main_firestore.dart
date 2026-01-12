@@ -46,7 +46,14 @@ class _FirestorePruebaState extends State<FirestorePrueba> {
         print("********************************");
         print(element.data());
         // TODO: por mirar esto y la agregación y modificación de datos y ver que hace el get()
-        listTile.add(ListTile(title: element.get("sender"),));
+        /* Añadimos a una lista de listTile los datos, con .get() obtenemos el valor de esa clave ('sender'),
+        * hacemos lo mismo con 'text' */
+        listTile.add(
+          ListTile(
+            title: Text("${element.get("sender")}"),
+            subtitle: Text("${element.get("text")}"),
+          ),
+        );
       });
     });
     return Scaffold(
