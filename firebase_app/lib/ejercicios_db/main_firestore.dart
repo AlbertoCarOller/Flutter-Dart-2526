@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'firebase_options.dart';
+import '../firebase_options2.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +45,7 @@ class _FirestorePruebaState extends State<FirestorePrueba> {
       event.docs.forEach((element) {
         print("********************************");
         print(element.data());
-        // TODO: por mirar esto y la agregación y modificación de datos y ver que hace el get()
+        // TODO: por mirar esto y la agregación y modificación de datos
         /* Añadimos a una lista de listTile los datos, con .get() obtenemos el valor de esa clave ('sender'),
         * hacemos lo mismo con 'text' */
         listTile.add(
