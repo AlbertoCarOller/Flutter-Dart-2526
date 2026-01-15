@@ -27,7 +27,7 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  /* Creamos un Stream que va a contener el flujo de datos de 'messages',
+  /* Creamos un CollectionReference que va a contener la referencia a los datos de 'messages',
     * CollectionReference -> Es el apuntador a la colección a la que intentamos acceder (messages),
     * snapshots() -> las diferentes campturas de estado que va viajando por el flujo */
   final CollectionReference messagesStream = FirebaseFirestore.instance
@@ -192,7 +192,7 @@ class _ChatState extends State<Chat> {
 }
 
 /// Esta función va a añadir a a la colección de 'messages' de la base de datos
-/// el documento con un id autogenerado con los campos 'sender', 'text' y 'date'
+/// el documento con un id auto-generado con los campos 'sender', 'text' y 'date'
 Future<void> enviarMensaje(String mensaje, CollectionReference messages) async {
   await messages
       .add({
@@ -211,9 +211,9 @@ Future<void> eliminarCampoValue(
   DocumentReference documentReference,
 ) async {
   await messages
-  // Mediante la referencia a la colección obtenemos el documento por su id
+      // Mediante la referencia a la colección obtenemos el documento por su id
       .doc(documentReference.id)
-  // Actualizamos el campo que pasemos por parámetros
+      // Actualizamos el campo que pasemos por parámetros
       .update({nombreCampo: FieldValue.delete()})
       .then((value) => print("----Campo eliminado----"));
 }
