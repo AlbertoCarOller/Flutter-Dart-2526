@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../firebase_options.dart'; // Importamos firebase_options de la base de datos del profesor
 
@@ -15,7 +16,11 @@ class UserList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: ThemeData(useMaterial3: true), home: Chat());
+    return MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: Chat(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
@@ -58,6 +63,29 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade400,
+      appBar: AppBar(
+        title: Text("Mensajería"),
+        actions: [
+          // Botón para eliminar todos los datos
+          IconButton(
+            onPressed: () async {
+              await eliminadoInfinito(messagesStream);
+            },
+            icon: Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: Icon(Icons.warning_amber, color: Colors.amber),
+            ),
+          ),
+          // Botón para la eliminación de todos los mensajes de mensajería
+          IconButton(
+            onPressed: () async {
+              await eliminarMensajeria(messagesStream);
+            },
+            icon: Icon(Icons.delete_sweep_outlined),
+            color: Colors.red,
+          ),
+        ],
+      ),
       // La columna principal
       body: Column(
         children: [
@@ -65,7 +93,7 @@ class _ChatState extends State<Chat> {
             flex: 7,
             // StreamBuilder -> Bloque que hace setState() solo cuando recibe datos del Stream
             child: StreamBuilder<QuerySnapshot>(
-              stream: messagesStream.snapshots(),
+              stream: messagesStream.orderBy("date").snapshots(),
               builder: (context, snapshot) {
                 // En caso de que haya error mostramos un texto rojo
                 if (snapshot.hasError) {
@@ -93,6 +121,19 @@ class _ChatState extends State<Chat> {
                               as DocumentSnapshot;
                       // Casteamos el document a un mapa para acceder a la key y value
                       datos = document.data()! as Map<String, dynamic>;
+                      /* Guardamos la fecha obtenida del mapa, pero lo ponemos como tipo dinámico porque
+                       no sabemos si vamos a recibir un TimeStamp u otra cosa, por lo que nos puede dar error */
+                      dynamic fecha = datos["date"];
+                      // 'is' es para castear la fecha a Timestam en caso de que sea
+                      if (fecha is Timestamp) {
+                        fecha = DateFormat.yMd().add_jm().format(
+                          // toDate() -> Transforma la fecha a un String
+                          fecha.toDate(),
+                        );
+                        // En caso de que sea otro tipo mostramos 'Sin fecha'
+                      } else {
+                        fecha = "Sin fecha";
+                      }
                       // Envolvemos la card en un Dismissible para borrar un mensaje
                       return Dismissible(
                         background: Container(
@@ -107,25 +148,39 @@ class _ChatState extends State<Chat> {
                           * que esta la obtenemos con reference */
                           await document.reference.delete();
                         },
-                        child: Card(
-                          color: Colors.green.shade400,
-                          child: ListTile(
-                            trailing: IconButton(
-                              icon: Icon(Icons.change_circle_outlined),
-                              // Este botón va a eliminar el value de un key del document
-                              onPressed: () async {
-                                await eliminarCampoValue(
-                                  "text",
-                                  messagesStream,
-                                  document.reference,
-                                );
-                              },
-                            ),
-                            title: Text(datos['sender'] ?? "Sin remitente"),
-                            subtitle: Text(datos['text'] ?? "Sin mensaje"),
-                            leading: Text(
-                              datos['date']?.toString() ?? "Sin fecha",
-                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Card(
+                                color: Colors.green.shade400,
+                                child: ListTile(
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.change_circle_outlined),
+                                    // Este botón va a eliminar el value de un key del document
+                                    onPressed: () async {
+                                      await eliminarCampoValue(
+                                        "text",
+                                        messagesStream,
+                                        document.reference,
+                                      );
+                                    },
+                                  ),
+                                  title: Text(
+                                    datos['sender'] ?? "Sin remitente",
+                                  ),
+                                  subtitle: Text(
+                                    datos['text'] ?? "Sin mensaje",
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                // Formateamos la fecha con DateFormat.yMd().add_jm().format() pasádole la fecha
+                                child: Text(fecha),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -198,8 +253,7 @@ Future<void> enviarMensaje(String mensaje, CollectionReference messages) async {
       .add({
         "sender": "Alberto",
         "text": mensaje,
-        "date":
-            "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+        "date": FieldValue.serverTimestamp(),
       })
       .then((value) => print("-------Mensaje enviado-------"));
 }
@@ -216,4 +270,40 @@ Future<void> eliminarCampoValue(
       // Actualizamos el campo que pasemos por parámetros
       .update({nombreCampo: FieldValue.delete()})
       .then((value) => print("----Campo eliminado----"));
+}
+
+/// Esta función va a eliminar todos los datos de mensajería constantemente,
+/// ya que abrimos un flujo que va a estar constatemente escuchando y
+/// eliminando del flujo original
+Future<void> eliminadoInfinito(CollectionReference messages) async {
+  // snapshots() -> es un flujo abierto constantemente escuchando
+  // NOTA: Stream.fromIterable() es el equivalente a stream() de Java, procesa elemento por elemento
+  messages
+      .snapshots()
+      // Aplanamos como si de un flatMap se tratara con asyncExpand() cada QuerySnapshot aplanamos su lista de documents
+      .asyncExpand((event) => Stream.fromIterable(event.docs))
+      // Recorremos los documents y los casteamos como tal para poder llamar a su función delete()
+      .forEach((element) async {
+        // Eliminamos los documentos
+        await (element as DocumentSnapshot).reference.delete();
+      });
+}
+
+/// Esta función va a eliminar todos los datos que haya ese momento
+/// en mensajería
+Future<void> eliminarMensajeria(CollectionReference messages) async {
+  /* Con get() obtenemos los mensajes por una SOLA foto pasada (QuerySnapshot),
+  no un flujo de fotos que escuche constatemente que es con snapshots() */
+  /* Cuando ha devuelto el Future el QuerySnapshot casteamos cada documento y
+   mediante un for de estos los vamos eliminando, antes intenté hacerlo con
+   asStream() pero cuando hacemos eso no mirbamos elemento por elemento de
+   lo que contenía la lista, directamente mirábamos la lista completa, no
+   funciona como en Java*/
+  await messages.get().then((value) async {
+    // Recorremos los documentos
+    for (var element in value.docs) {
+      // Se elimina en firebase
+      await (element as DocumentSnapshot).reference.delete();
+    }
+  });
 }
