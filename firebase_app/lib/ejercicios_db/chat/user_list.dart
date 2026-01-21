@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../firebase_options.dart'; // Importamos firebase_options de la base de datos del profesor
+import '../../firebase_options.dart'; // Importamos firebase_options de la base de datos del profesor
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
