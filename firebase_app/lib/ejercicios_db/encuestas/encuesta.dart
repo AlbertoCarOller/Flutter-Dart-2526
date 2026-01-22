@@ -1,45 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import '../../firebase_options.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MainEncuestas());
-}
-
-class MainEncuestas extends StatelessWidget {
-  const MainEncuestas({super.key});
+class Encuesta extends StatefulWidget {
+  const Encuesta({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      title: "MainEncuestas",
-      home: Votacion(),
-    );
-  }
+  State<Encuesta> createState() => _EncuestaState();
 }
 
-class Votacion extends StatefulWidget {
-  const Votacion({super.key});
-
-  @override
-  State<Votacion> createState() => _VotacionState();
-}
-
-class _VotacionState extends State<Votacion> {
-  // Creamos la referencia a la colección de lenguajes
-  final CollectionReference lenguajeReference = FirebaseFirestore.instance
-      .collection("encuestas");
-
+class _EncuestaState extends State<Encuesta> {
   // Creamos una lista de los diferentes campos que hay para así recorrerlos
   List<String> lenguajesList = ["dart", "python", "java"];
 
   @override
   Widget build(BuildContext context) {
+    // Obtenemos el argumento pasado por la navegación
+    String docId = ModalRoute.of(context)!.settings.arguments as String;
+    // Creamos la referencia a la colección de encuestas, accediendo a un documento concreto
+    final DocumentReference lenguajeReference = FirebaseFirestore.instance
+        .collection("encuestas")
+        .doc(docId);
     return Scaffold(
       appBar: AppBar(
         title: Text("Guerra de lenguajes 🔥"),
@@ -58,7 +38,7 @@ class _VotacionState extends State<Votacion> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else {
-            int totalVotos = calcularTotal(snapshot.data!.docs);
+            int totalVotos = calcularTotal(snapshot);
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -108,23 +88,20 @@ class _VotacionState extends State<Votacion> {
 /// es el informe de un snapchot, nos puede avisar de errores y demás,
 /// este ya estará cargado gracias al StreamBuilder en la práctica es un snapshot,
 /// vamos a pasar la lista de documentos del snapshot
-int calcularTotal(List<QueryDocumentSnapshot<Object?>> snapshot) {
+int calcularTotal(AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
   /* Con fold() reducimos el flujo en un solo valor por como
   * el reduce() de Java, 'previousValue' representa el valor acumulado
-  * que lo empezamos en 0 */
-  return snapshot.fold(0, (previousValue, element) {
-    // Casteamos a doc el elemento
-    DocumentSnapshot doc = element as DocumentSnapshot;
-    // Una vez que tenemos el Document lo casteamos a un mapa para acceder a los valores
-    Map<String, dynamic> mapa = doc.data() as Map<String, dynamic>;
-    // Suma acumulada
-    int suma = 0;
-    // Se suma dependiendo del valor obtenido
-    suma += (mapa["dart"] ?? 0) as int;
-    suma += (mapa["python"] ?? 0) as int;
-    suma += (mapa["java"] ?? 0) as int;
-    // Le sumamos al acumulador el valor correspondiente
-    return previousValue += suma;
+  * que lo empezamos en 0 (Deprecado) */
+  // Obtenemos el DocumentSnapshot, casteamos
+  DocumentSnapshot doc = snapshot.data as DocumentSnapshot;
+  // Ahora obtenemso los datos del DocumentSnapshot y lo casteamos al mapa
+  Map<String, dynamic> mapa = doc.data() as Map<String, dynamic>;
+  // Obtenemos el total de votos con las entradas de un mapa
+  return mapa.entries.fold(0, (previousValue, element) {
+    if (element.value is int) {
+      previousValue += element.value as int;
+    }
+    return previousValue;
   });
 }
 
@@ -133,35 +110,31 @@ int calcularTotal(List<QueryDocumentSnapshot<Object?>> snapshot) {
 /// el nombre de cada campo y dependiendo del cual esté en ese momneto en la iteración
 /// se incrementa
 Future<void> incrementarVotacion(
-  // TODO: debe haber 2 documentos, preguntar al maestro, ya al votar se suma 2, es decir que al sumar, suma el doble
   String campo,
-  AsyncSnapshot<QuerySnapshot<Object?>> snapshot,
+  AsyncSnapshot<DocumentSnapshot<Object?>> snapshot,
 ) async {
-  // Recorremos los documentos de la última foto
-  List<DocumentSnapshot<Object?>> lista = snapshot.data!.docs
-      // Los casteamos a DocumentSnapshot para poder actualizar
-      .map((e) => e as DocumentSnapshot)
-      .toList();
+  // Obtenemos el document
+  DocumentSnapshot doc = snapshot.data as DocumentSnapshot;
   /* Con FieldValue.increment() incrementamos en 1 el valor, no se puede utilizar
-       el forEach(), este no espera al wait(), el for-in/for es válido */
-  print(lista.length); // Mostramos los documentos que hay
-  for (DocumentSnapshot doc in lista) {
-    await doc.reference.update({campo: FieldValue.increment(1)});
-  }
+       el forEach(), este no espera al wait(), el for-in/for es válido (Deprecado) */
+
+  /* Incrementamos la votación del lenguaje concreto, debemos de obtener la referencia
+   del document para poder llamar a update() */
+  doc.reference.update({campo: FieldValue.increment(1)});
 }
 
+/// Esta función va a obetener las votaciones de un lenguaje
+/// en concreto
 int obtenerVotosLenguaje(
   String lenguaje,
-  AsyncSnapshot<QuerySnapshot<Object?>> snapshot,
+  AsyncSnapshot<DocumentSnapshot<Object?>> snapshot,
 ) {
-  return snapshot.data!.docs.fold(0, (previousValue, element) {
-    // Casteamos a DocumentSnapshot
-    DocumentSnapshot doc = element as DocumentSnapshot;
-    // Casteamos al mapa para poder buscar el campo (lenaguaje) y sumar
-    Map<String, dynamic> mapa = doc.data()! as Map<String, dynamic>;
-    // Sumamos al acumulador
-    return previousValue += (mapa[lenguaje] ?? 0) as int;
-  });
+  // Casteamos a DocumentSnapshot
+  DocumentSnapshot doc = snapshot.data as DocumentSnapshot;
+  // Casteamos a mapa
+  Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
+  // Comprobamos que sea un entero el total antes de mostrar
+  return map[lenguaje] is int ? map[lenguaje] : 0;
 }
 
 class _BarraVotacion extends StatelessWidget {
