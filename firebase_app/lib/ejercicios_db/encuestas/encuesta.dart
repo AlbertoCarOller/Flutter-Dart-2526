@@ -9,8 +9,20 @@ class Encuesta extends StatefulWidget {
 }
 
 class _EncuestaState extends State<Encuesta> {
-  // Creamos una lista de los diferentes campos que hay para así recorrerlos
-  List<String> lenguajesList = ["dart", "python", "java"];
+  // Creamos un ScrollController
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() => print(scrollController.position.pixels));
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +34,7 @@ class _EncuestaState extends State<Encuesta> {
         .doc(docId);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Guerra de lenguajes 🔥"),
+        title: Text("Encuesta de $docId 🔥"),
         backgroundColor: Colors.blueAccent,
       ),
       /* IMPORTANTE: el StreamBuilder, tiene su estado propio que se actualiza solo, no solo eso,
@@ -38,42 +50,56 @@ class _EncuestaState extends State<Encuesta> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else {
+            // Variable para el número total de votos
             int totalVotos = calcularTotal(snapshot);
+            // Guardamos el mapa de los diferentes campos del documento
+            Map<String, dynamic> campos =
+                snapshot.data!.data() as Map<String, dynamic>;
+            // Lo transformamos a una lista para ordenar los campos (por número de votos)
+            List<MapEntry<String, dynamic>> lista = campos.entries.toList();
+            // Con sort() ordenamos, IMPORTANTE LOS MAPAS NO PUEDEN ORDENAR
+            lista.sort(
+              (a, b) => (b.value is int ? b.value as int : 0).compareTo(
+                (a.value is int ? a.value as int : 0),
+              ),
+            );
+            // Hacemos la pantalla scrollable
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "Votos Totales: $totalVotos",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        "Votos Totales: $totalVotos",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  for (int i = 0; i < lenguajesList.length; i++)
-                    _BarraVotacion(
-                      label: lenguajesList.elementAt(i).toUpperCase(),
-                      votos: obtenerVotosLenguaje(
-                        lenguajesList.elementAt(i),
-                        snapshot,
+                    for (int i = 0; i < lista.length; i++)
+                      _BarraVotacion(
+                        label: lista.elementAt(i).key.toUpperCase(),
+                        votos: obtenerVotosCampo(lista.elementAt(i)),
+                        total: totalVotos,
+                        color: i == 0
+                            ? Colors.lightBlueAccent
+                            : i == 1
+                            ? Colors.orange
+                            : Colors.red,
+                        onTap: () async {
+                          await incrementarVotacion(
+                            // Le pasamos el key
+                            lista.elementAt(i).key,
+                            snapshot,
+                          );
+                        },
                       ),
-                      total: totalVotos,
-                      color: i == 0
-                          ? Colors.lightBlueAccent
-                          : i == 1
-                          ? Colors.orange
-                          : Colors.red,
-                      onTap: () async {
-                        await incrementarVotacion(
-                          lenguajesList.elementAt(i),
-                          snapshot,
-                        );
-                      },
-                    ),
-                ],
+                  ],
+                ),
               ),
             );
           }
@@ -84,7 +110,7 @@ class _EncuestaState extends State<Encuesta> {
 }
 
 /// Esta función va a devolver un int que se ha obtenido sumando todos los valores
-/// de cada snapsho, sumando los votos para cada lenguaje, AsyncSnapshot<QuerySnapshot<Object?>>
+/// de cada snapsho, sumando los votos para cada lenguaje, AsyncSnapshot
 /// es el informe de un snapchot, nos puede avisar de errores y demás,
 /// este ya estará cargado gracias al StreamBuilder en la práctica es un snapshot,
 /// vamos a pasar la lista de documentos del snapshot
@@ -123,18 +149,11 @@ Future<void> incrementarVotacion(
   doc.reference.update({campo: FieldValue.increment(1)});
 }
 
-/// Esta función va a obetener las votaciones de un lenguaje
-/// en concreto
-int obtenerVotosLenguaje(
-  String lenguaje,
-  AsyncSnapshot<DocumentSnapshot<Object?>> snapshot,
-) {
-  // Casteamos a DocumentSnapshot
-  DocumentSnapshot doc = snapshot.data as DocumentSnapshot;
-  // Casteamos a mapa
-  Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
-  // Comprobamos que sea un entero el total antes de mostrar
-  return map[lenguaje] is int ? map[lenguaje] : 0;
+/// Esta función va a obtener las votaciones de un campo
+/// concreto
+int obtenerVotosCampo(MapEntry<String, dynamic> entry) {
+  // El valor del campo concreto
+  return entry.value is int ? entry.value : 0;
 }
 
 class _BarraVotacion extends StatelessWidget {

@@ -20,6 +20,19 @@ class _MenuEncuestasState extends State<MenuEncuestas> {
         title: Text("Encuestas"),
         backgroundColor: Colors.orange.shade300,
         centerTitle: true,
+        actions: [
+          IconButton(
+            // Al pulsar llevará a una pantalla para crear una encuesta
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                "/crear",
+                arguments: encuestasReference,
+              );
+            },
+            icon: Icon(Icons.add_circle_outline_rounded),
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: encuestasReference.snapshots(),

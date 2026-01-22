@@ -1,3 +1,4 @@
+import 'package:firebase_app/ejercicios_db/encuestas/crear_encuesta.dart';
 import 'package:firebase_app/ejercicios_db/encuestas/menu_encuestas.dart';
 import 'package:firebase_app/ejercicios_db/encuestas/encuesta.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,6 +24,7 @@ class Principal extends StatelessWidget {
       routes: {
         "/": (context) => MenuEncuestas(),
         "/encuesta": (context) => Encuesta(),
+        "/crear": (context) => CrearEncuesta(),
       },
     );
   }
