@@ -44,6 +44,7 @@ class _EncuestaState extends State<Encuesta> {
     if (docId == "Error") {
       /* Utilizamos WidgetsBinding.instance.addPostFrameCallback((_)
        => Navigator.of(context).pushReplacementNamed("/") para navegar a la raíz */
+      // CUIDADO PORQUE ESTO PUEDE OCURRIR MÁS LENTO DE LO QUE CREEMOS
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => Navigator.of(context).pushReplacementNamed("/"),
       );
@@ -51,7 +52,7 @@ class _EncuestaState extends State<Encuesta> {
   }
 
   // Creamos la referencia a la colección de encuestas, accediendo a un documento concreto
-  DocumentReference<Object?> get lenguajeReference =>
+  DocumentReference<Object?>? get docCampos =>
       FirebaseFirestore.instance.collection("encuestas").doc(docId);
 
   @override
@@ -63,109 +64,112 @@ class _EncuestaState extends State<Encuesta> {
       ),
       /* IMPORTANTE: el StreamBuilder, tiene su estado propio que se actualiza solo, no solo eso,
        también el snapshot que devuelve ya es cargado, no una promesa a futuro */
-      body: StreamBuilder(
-        stream: lenguajeReference.snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(
-              "Error",
-              style: TextStyle(fontSize: 22, color: Colors.red),
-            );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else {
-            // Comprobamos que exista el documento
-            if (!snapshot.data!.exists) {
-              // Mostramos un texto de que no existe
-              return Text(
-                "No existe el documento",
-                style: TextStyle(fontSize: 20),
-              );
-            }
-            // Variable para el número total de votos
-            int totalVotos = calcularTotal(snapshot);
-            // Guardamos el mapa de los diferentes campos del documento
-            Map<String, dynamic> campos =
-                snapshot.data!.data() as Map<String, dynamic>;
-            // Lo transformamos a una lista para ordenar los campos (alfabéticamente)
-            List<MapEntry<String, dynamic>> lista = campos.entries.toList();
-            // Con sort() ordenamos, IMPORTANTE LOS MAPAS NO PUEDEN ORDENAR
-            lista.sort((a, b) => b.key.compareTo(a.key));
-            // Hacemos la pantalla scrollable
-            return Center(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        "Votos Totales: $totalVotos",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    for (int i = 0; i < lista.length; i++)
-                      _BarraVotacion(
-                        label: lista.elementAt(i).key.toUpperCase(),
-                        votos: obtenerVotosCampo(lista.elementAt(i)),
-                        total: totalVotos,
-                        color: i == 0
-                            ? Colors.lightBlueAccent
-                            : i == 1
-                            ? Colors.orange
-                            : Colors.red,
-                        onTap: () async {
-                          await incrementarVotacion(
-                            // Le pasamos el key
-                            lista.elementAt(i).key,
-                            snapshot,
-                          );
-                        },
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 60),
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // Creamos un TextFormField para crear un campo nuevo de encuesta
-                            SizedBox(
-                              width: 250,
-                              height: 70,
-                              child: TextFormField(
-                                controller: _campoController,
-                                decoration: InputDecoration(
-                                  label: Text("Introduce un campo"),
-                                  border: UnderlineInputBorder(),
-                                ),
+      // Comprobamos que EXISTA la dirección del documento
+      body: docId == "Error"
+          ? CircularProgressIndicator()
+          : StreamBuilder(
+              stream: docCampos!.snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text(
+                    "Error",
+                    style: TextStyle(fontSize: 22, color: Colors.red),
+                  );
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else {
+                  // Comprobamos que exista realmente el documento con exists
+                  if (!snapshot.data!.exists) {
+                    // Mostramos un texto de que no existe
+                    return CircularProgressIndicator();
+                  }
+                  // Variable para el número total de votos
+                  int totalVotos = calcularTotal(snapshot);
+                  // Guardamos el mapa de los diferentes campos del documento
+                  Map<String, dynamic> campos =
+                      snapshot.data!.data() as Map<String, dynamic>;
+                  // Lo transformamos a una lista para ordenar los campos (alfabéticamente)
+                  List<MapEntry<String, dynamic>> lista = campos.entries
+                      .toList();
+                  // Con sort() ordenamos, IMPORTANTE LOS MAPAS NO PUEDEN ORDENAR
+                  lista.sort((a, b) => b.key.compareTo(a.key));
+                  // Hacemos la pantalla scrollable
+                  return Center(
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              "Votos Totales: $totalVotos",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            IconButton(
-                              // Al presionar el botón se crear el atributo para el document
-                              onPressed: () {
-                                crearCampo(
-                                  lenguajeReference,
-                                  _campoController.text,
+                          ),
+                          for (int i = 0; i < lista.length; i++)
+                            _BarraVotacion(
+                              label: lista.elementAt(i).key.toUpperCase(),
+                              votos: obtenerVotosCampo(lista.elementAt(i)),
+                              total: totalVotos,
+                              color: i == 0
+                                  ? Colors.lightBlueAccent
+                                  : i == 1
+                                  ? Colors.orange
+                                  : Colors.red,
+                              onTap: () async {
+                                await incrementarVotacion(
+                                  // Le pasamos el key
+                                  lista.elementAt(i).key,
+                                  snapshot,
                                 );
                               },
-                              icon: Icon(Icons.arrow_upward_outlined),
                             ),
-                          ],
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 60),
+                            child: Container(
+                              alignment: Alignment.bottomRight,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  // Creamos un TextFormField para crear un campo nuevo de encuesta
+                                  SizedBox(
+                                    width: 250,
+                                    height: 70,
+                                    child: TextFormField(
+                                      controller: _campoController,
+                                      decoration: InputDecoration(
+                                        label: Text("Introduce un campo"),
+                                        border: UnderlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    // Al presionar el botón se crear el atributo para el document
+                                    onPressed: () {
+                                      crearCampo(
+                                        docCampos!,
+                                        _campoController.text,
+                                      );
+                                    },
+                                    icon: Icon(Icons.arrow_upward_outlined),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            );
-          }
-        },
-      ),
+                  );
+                }
+              },
+            ),
     );
   }
 }
