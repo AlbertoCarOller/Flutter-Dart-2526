@@ -74,6 +74,14 @@ class _EncuestaState extends State<Encuesta> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else {
+            // Comprobamos que exista el documento
+            if (!snapshot.data!.exists) {
+              // Mostramos un texto de que no existe
+              return Text(
+                "No existe el documento",
+                style: TextStyle(fontSize: 20),
+              );
+            }
             // Variable para el número total de votos
             int totalVotos = calcularTotal(snapshot);
             // Guardamos el mapa de los diferentes campos del documento
@@ -171,17 +179,21 @@ int calcularTotal(AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
   /* Con fold() reducimos el flujo en un solo valor por como
   * el reduce() de Java, 'previousValue' representa el valor acumulado
   * que lo empezamos en 0 (Deprecado) */
-  // Obtenemos el DocumentSnapshot, casteamos
-  DocumentSnapshot doc = snapshot.data as DocumentSnapshot;
-  // Ahora obtenemso los datos del DocumentSnapshot y lo casteamos al mapa
-  Map<String, dynamic> mapa = doc.data() as Map<String, dynamic>;
-  // Obtenemos el total de votos con las entradas de un mapa
-  return mapa.entries.fold(0, (previousValue, element) {
-    if (element.value is int) {
-      previousValue += element.value as int;
-    }
-    return previousValue;
-  });
+  // Comprobamos que exista el documento
+  if (snapshot.data!.exists) {
+    // Obtenemos el DocumentSnapshot, casteamos
+    DocumentSnapshot doc = snapshot.data as DocumentSnapshot;
+    // Ahora obtenemso los datos del DocumentSnapshot y lo casteamos al mapa
+    Map<String, dynamic> mapa = doc.data() as Map<String, dynamic>;
+    // Obtenemos el total de votos con las entradas de un mapa
+    return mapa.entries.fold(0, (previousValue, element) {
+      if (element.value is int) {
+        previousValue += element.value as int;
+      }
+      return previousValue;
+    });
+  }
+  return 0;
 }
 
 /// Esta función va a incrementar en 1 el número de la votación del lenguaje
@@ -192,14 +204,16 @@ Future<void> incrementarVotacion(
   String campo,
   AsyncSnapshot<DocumentSnapshot<Object?>> snapshot,
 ) async {
-  // Obtenemos el document
-  DocumentSnapshot doc = snapshot.data as DocumentSnapshot;
-  /* Con FieldValue.increment() incrementamos en 1 el valor, no se puede utilizar
+  if (snapshot.data!.exists) {
+    // Obtenemos el document
+    DocumentSnapshot doc = snapshot.data as DocumentSnapshot;
+    /* Con FieldValue.increment() incrementamos en 1 el valor, no se puede utilizar
        el forEach(), este no espera al wait(), el for-in/for es válido (Deprecado) */
 
-  /* Incrementamos la votación del lenguaje concreto, debemos de obtener la referencia
+    /* Incrementamos la votación del lenguaje concreto, debemos de obtener la referencia
    del document para poder llamar a update() */
-  doc.reference.update({campo: FieldValue.increment(1)});
+    doc.reference.update({campo: FieldValue.increment(1)});
+  }
 }
 
 /// Esta función va a obtener las votaciones de un campo
