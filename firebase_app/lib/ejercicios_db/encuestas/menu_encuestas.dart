@@ -55,25 +55,41 @@ class _MenuEncuestasState extends State<MenuEncuestas> {
               itemBuilder: (context, index) {
                 // Guardamos el id del document, para posteriormente acceder
                 String docId = snapshot.data!.docs.elementAt(index).id;
-                // Hacemos una columna, que va a contener las ListView y un Divider
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Text(docId.toUpperCase()),
-                      trailing: IconButton(
-                        // Al pulsar, navegamos a la encuesta concreta, pasándole el id
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            "/encuesta",
-                            arguments: docId,
-                          );
-                        },
-                        icon: Icon(Icons.chevron_right),
+                // Creamos un Dismissible para borrar una encuesta
+                return Dismissible(
+                  background: Container(
+                    alignment: Alignment.center,
+                    color: Colors.red,
+                    child: Icon(Icons.delete_outline),
+                  ),
+                  direction: DismissDirection.endToStart,
+                  // Cuando deslizamos borramos una encuesta
+                  onDismissed: (direction) async {
+                    await borrarEncuesta(
+                      snapshot.data!.docs.elementAt(index).id,
+                    );
+                  },
+                  key: Key(snapshot.data!.docs.elementAt(index).id),
+                  // Hacemos una columna, que va a contener las ListView y un Divider
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Text(docId.toUpperCase()),
+                        trailing: IconButton(
+                          // Al pulsar, navegamos a la encuesta concreta, pasándole el id
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              "/encuesta",
+                              arguments: docId,
+                            );
+                          },
+                          icon: Icon(Icons.chevron_right),
+                        ),
                       ),
-                    ),
-                    Divider(),
-                  ],
+                      Divider(),
+                    ],
+                  ),
                 );
               },
               itemCount: snapshot.data!.docs.length,
@@ -82,5 +98,11 @@ class _MenuEncuestasState extends State<MenuEncuestas> {
         },
       ),
     );
+  }
+
+  /// Esta función va a borrar el documento con el id
+  /// pasado por parámetros
+  Future<void> borrarEncuesta(String idDocument) async {
+    await encuestasReference.doc(idDocument).delete();
   }
 }

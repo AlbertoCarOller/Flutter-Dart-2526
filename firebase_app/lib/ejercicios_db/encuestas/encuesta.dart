@@ -12,26 +12,50 @@ class _EncuestaState extends State<Encuesta> {
   // Creamos un ScrollController
   final scrollController = ScrollController();
 
+  // Creamos la variable donde se va a almacenar el documento id
+  String docId = "";
+
+  // Creamos un controller para un textFormField para agregar campo
+  final _campoController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     scrollController.addListener(() => print(scrollController.position.pixels));
+    _campoController.addListener(() => print(_campoController.text));
   }
 
   @override
   void dispose() {
     scrollController.dispose();
+    _campoController.dispose();
     super.dispose();
   }
 
+  // didChangeDependencies() -> Un bloque que contiene el contexto para cargar argumentos
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Obtenemos el id del documento, comprobamos que no sea null
+    docId = (ModalRoute.of(context)?.settings.arguments == null
+        ? "Error"
+        : ModalRoute.of(context)!.settings.arguments as String);
+    // Si el docId al recargar es "", volvemos a la pantalla raíz (menú)
+    if (docId == "Error") {
+      /* Utilizamos WidgetsBinding.instance.addPostFrameCallback((_)
+       => Navigator.of(context).pushReplacementNamed("/") para navegar a la raíz */
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => Navigator.of(context).pushReplacementNamed("/"),
+      );
+    }
+  }
+
+  // Creamos la referencia a la colección de encuestas, accediendo a un documento concreto
+  DocumentReference<Object?> get lenguajeReference =>
+      FirebaseFirestore.instance.collection("encuestas").doc(docId);
+
   @override
   Widget build(BuildContext context) {
-    // Obtenemos el argumento pasado por la navegación
-    String docId = ModalRoute.of(context)!.settings.arguments as String;
-    // Creamos la referencia a la colección de encuestas, accediendo a un documento concreto
-    final DocumentReference lenguajeReference = FirebaseFirestore.instance
-        .collection("encuestas")
-        .doc(docId);
     return Scaffold(
       appBar: AppBar(
         title: Text("Encuesta de $docId 🔥"),
@@ -55,14 +79,10 @@ class _EncuestaState extends State<Encuesta> {
             // Guardamos el mapa de los diferentes campos del documento
             Map<String, dynamic> campos =
                 snapshot.data!.data() as Map<String, dynamic>;
-            // Lo transformamos a una lista para ordenar los campos (por número de votos)
+            // Lo transformamos a una lista para ordenar los campos (alfabéticamente)
             List<MapEntry<String, dynamic>> lista = campos.entries.toList();
             // Con sort() ordenamos, IMPORTANTE LOS MAPAS NO PUEDEN ORDENAR
-            lista.sort(
-              (a, b) => (b.value is int ? b.value as int : 0).compareTo(
-                (a.value is int ? a.value as int : 0),
-              ),
-            );
+            lista.sort((a, b) => b.key.compareTo(a.key));
             // Hacemos la pantalla scrollable
             return Center(
               child: SingleChildScrollView(
@@ -98,6 +118,39 @@ class _EncuestaState extends State<Encuesta> {
                           );
                         },
                       ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 60),
+                      child: Container(
+                        alignment: Alignment.bottomRight,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            // Creamos un TextFormField para crear un campo nuevo de encuesta
+                            SizedBox(
+                              width: 250,
+                              height: 70,
+                              child: TextFormField(
+                                controller: _campoController,
+                                decoration: InputDecoration(
+                                  label: Text("Introduce un campo"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              // Al presionar el botón se crear el atributo para el document
+                              onPressed: () {
+                                crearCampo(
+                                  lenguajeReference,
+                                  _campoController.text,
+                                );
+                              },
+                              icon: Icon(Icons.arrow_upward_outlined),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -154,6 +207,16 @@ Future<void> incrementarVotacion(
 int obtenerVotosCampo(MapEntry<String, dynamic> entry) {
   // El valor del campo concreto
   return entry.value is int ? entry.value : 0;
+}
+
+/// Esta función va a añadir un campo a un documento ya existente, para
+/// mantener lo que ya hay debemos de usar un SetOptions(merge: true),
+/// para no sobreescribir
+Future<void> crearCampo(
+  DocumentReference documentReference,
+  String nombreCampo,
+) async {
+  documentReference.set({nombreCampo: 0}, SetOptions(merge: true));
 }
 
 class _BarraVotacion extends StatelessWidget {
