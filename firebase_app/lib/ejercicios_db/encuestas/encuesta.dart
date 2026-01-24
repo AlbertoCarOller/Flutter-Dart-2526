@@ -79,8 +79,8 @@ class _EncuestaState extends State<Encuesta> {
                     ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 } else {
-                  // Comprobamos que exista realmente el documento con exists
-                  if (!snapshot.data!.exists) {
+                  // Comprobamos que exista realmente el documento con exists y que tenga datos
+                  if (!snapshot.hasData || !snapshot.data!.exists) {
                     // Mostramos un texto de que no existe
                     return CircularProgressIndicator();
                   }
