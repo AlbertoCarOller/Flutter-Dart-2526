@@ -53,7 +53,15 @@ class _MenuToeState extends State<MenuToe> {
                             title: Text(
                               snapshot.data!.docs.elementAt(index).id,
                             ),
+                            // Mostramos el estado de las salas
+                            subtitle: Text(
+                              ((snapshot.data!.docs.elementAt(index).data()
+                                          as Map<String, dynamic>)["estado"] ??
+                                      "estado desconocido")
+                                  as String,
+                            ),
                             trailing: IconButton(
+                              // Al presionar navegamos hasta la sala, para ello pasamos el id del document
                               onPressed: () {
                                 Navigator.pushNamed(
                                   context,
@@ -76,5 +84,13 @@ class _MenuToeState extends State<MenuToe> {
               },
             ),
     );
+  }
+
+  /// Esta función va a asignar el jugador al campo de Firebase, en caso de que
+  /// haya espacios disponibles
+  Future<bool> asignarJugador(Map<String, dynamic> camposDoc) async {
+    // Obtenemos los nickname de los 2 jugadores
+    String nick1 = (camposDoc["jugador1"] as Map<String, dynamic>)["nickname"];
+    String nick2 = (camposDoc["jugador2"] as Map<String, dynamic>)["nickname"];
   }
 }

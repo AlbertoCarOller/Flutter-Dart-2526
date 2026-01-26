@@ -4,7 +4,7 @@ import 'package:firebase_app/ejercicios_db/tic_tac_toe_online/screens/menu_toe.d
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import '../../../firebase_options.dart';
+import '../../../firebase_options2.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +25,7 @@ class PrincipalToe extends StatelessWidget {
       ),
     );
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: tema,
       title: "Principal",
       initialRoute: "/",

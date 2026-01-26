@@ -44,7 +44,7 @@ class _EncuestaState extends State<Encuesta> {
     if (docId == "Error") {
       /* Utilizamos WidgetsBinding.instance.addPostFrameCallback((_)
        => Navigator.of(context).pushReplacementNamed("/") para navegar a la raíz */
-      // CUIDADO PORQUE ESTO PUEDE OCURRIR MÁS LENTO DE LO QUE CREEMOS
+      // CUIDADO PORQUE ESTO PUEDE OCURRIR MÁS LENTO DE LO QUE CREEMOS Y SEGUIR HACIA ADELANTE EN EL CÓDIGO
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => Navigator.of(context).pushReplacementNamed("/"),
       );
