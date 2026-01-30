@@ -139,13 +139,12 @@ class _JuegoState extends State<Juego> {
                                   * no voy a dejar al usuario que vuelva a pulsar, antes deben de
                                   * completarse los datos, aparte comrpobamos que estén los dos
                                   * jugadores en la sala */
-                                  if (tablero.elementAt(index) != 0 ||
-                                      procesandoOnTap ||
+                                  if (tablero.elementAt(index) != 0 &&
+                                      procesandoOnTap &&
                                       ((jugador1["nickname"] ?? "") as String)
-                                          .isEmpty ||
+                                          .isNotEmpty &&
                                       ((jugador2["nickname"] ?? "") as String)
-                                          .isEmpty)
-                                    return;
+                                          .isNotEmpty) {}
                                   // Comprobamos si hay ganador, en caso de que sí, tras pulsar se borra el mensaje y el ganador
                                   if (indexGanador != 0) {
                                     // Borramos el ganador de firebase
