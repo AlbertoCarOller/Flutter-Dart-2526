@@ -8,6 +8,8 @@ class DataSingleton {
 
   // Creamos los atributos, se crean como atributos normales
   String nickname = "";
+  // índice del usuario
+  int indexUser = 0;
 
   /* Creamos el constructor que va a devolver la instacia (factory),
   * este no tiene porque crear una nueva instancia del objeto, que es

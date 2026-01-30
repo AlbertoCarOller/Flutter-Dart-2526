@@ -62,7 +62,7 @@ class LogicaJuego {
 
   // --- 3. ALGORITMO DE VICTORIA (La parte matemática compleja) ---
   // Devuelve: 0 (nadie gana), 1 (gana J1), 2 (gana J2)
-  static int comprobarGanador(List<int> tablero) {
+  /*static int comprobarGanador(List<int> tablero) {
     // Recorremos cada celda del tablero
     for (int i = 0; i < TAMANO_TABLERO; i++) {
       int ficha = tablero[i];
@@ -93,6 +93,48 @@ class LogicaJuego {
     }
 
     return 0; // Nadie ha ganado aún
+  }*/
+
+  // --- 3. ALGORITMO DE VICTORIA (Adaptado a 3x3) ---
+  static int comprobarGanador(List<int> tablero) {
+    // Definimos el ancho real del tablero para cálculos
+    const int ANCHO = 3; // CAMBIO: Antes era implícitamente 8
+
+    for (int i = 0; i < TAMANO_TABLERO; i++) {
+      int ficha = tablero[i];
+      if (ficha == VACIO) continue;
+
+      // Convertimos índice lineal a coordenadas (fila, col)
+      // CAMBIO: Dividimos y modulamos por 3 (ANCHO), no por 8
+      int fila = (i / ANCHO).floor();
+      int col = i % ANCHO;
+
+      // 1. Horizontal hacia la derecha
+      // CAMBIO: Comparamos contra 3 (ANCHO)
+      if (col + LINEA_PARA_GANAR <= ANCHO &&
+          _checkLinea(tablero, i, 1)) return ficha;
+
+      // 2. Vertical hacia abajo
+      // CAMBIO: Comparamos contra 3 y el salto es de 3
+      if (fila + LINEA_PARA_GANAR <= ANCHO &&
+          _checkLinea(tablero, i, 3)) return ficha;
+
+      // 3. Diagonal descendente (\)
+      // CAMBIO: Límites contra 3 y el salto es 4 (ANCHO + 1)
+      // Por qué 4? Porque 0 -> 4 -> 8 es la diagonal
+      if (col + LINEA_PARA_GANAR <= ANCHO &&
+          fila + LINEA_PARA_GANAR <= ANCHO &&
+          _checkLinea(tablero, i, 4)) return ficha;
+
+      // 4. Diagonal ascendente (/)
+      // CAMBIO: Límites contra 3 y el salto es 2 (ANCHO - 1)
+      // Por qué 2? Porque 2 -> 4 -> 6 es la diagonal inversa
+      if (col - (LINEA_PARA_GANAR - 1) >= 0 &&
+          fila + LINEA_PARA_GANAR <= ANCHO &&
+          _checkLinea(tablero, i, 2)) return ficha;
+    }
+
+    return 0;
   }
 
   // Helper privado para verificar una línea específica

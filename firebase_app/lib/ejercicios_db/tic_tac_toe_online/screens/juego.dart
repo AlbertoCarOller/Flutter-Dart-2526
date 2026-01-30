@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app/ejercicios_db/logica_juego/logica_juego.dart';
 import 'package:firebase_app/ejercicios_db/tic_tac_toe_online/data/data_singleton.dart';
 import 'package:flutter/material.dart';
 
@@ -16,14 +17,14 @@ class _JuegoState extends State<Juego> {
   // Creamos la variable que va a contener la referencia al document
   DocumentReference? documentReference;
 
+  // Creamos una variable para almacenar el índice del ganador
+  int indexGanador = 0;
+
+  // Creamos una variable que va a bloquear el onTap() mientras se procesan las funciones async
+  bool procesandoOnTap = false;
+
   // Cargamos la clase con los datos
   DataSingleton data = DataSingleton();
-
-  // Una lista que guarda el índice las casillas marcadas por el usuario (nosotros)
-  List<int> marcadasPorTi = [];
-
-  // Una lista que guarda el índice de las casillas marcadas por el oponente
-  List<int> marcadasOponente = [];
 
   // Cargamos los datos
   @override
@@ -119,26 +120,63 @@ class _JuegoState extends State<Juego> {
                               return GestureDetector(
                                 child: Card(
                                   color: Colors.blue.shade200,
-                                  // Comprobamos si está marcada o no
-                                  child: marcadasPorTi.contains(index)
+                                  // Comprobamos si está marcada o no por ek jugador 1 para poner un círculo
+                                  child: tablero.elementAt(index) == 1
                                       ? Icon(
                                           Icons.circle_outlined,
                                           color: Colors.white,
                                         )
-                                      : marcadasOponente.contains(index)
+                                      // En caso de que el tablero en ese índice tenga 2 se marca con x
+                                      : tablero.elementAt(index) == 2
                                       ? Icon(Icons.clear, color: Colors.white)
                                       : Text(""),
                                 ),
                                 // Al pulsar se marca
-                                onTap: () {
-                                  // Comprobamos que no haya sido pulsado antes
-                                  if (marcadasPorTi.contains(index) ||
-                                      marcadasOponente.contains(index)) {
-                                    // Guaramos el índice
-                                    marcadasPorTi.add(index);
-                                    // TODO: seguramente se tenga que quitar
-                                    // TODO: preguntar al maestro porque tarda en construirse
-                                    setState(() {});
+                                onTap: () async {
+                                  /* Comprobamos que no se pueda hacer onTap(), comprobamos
+                                  * si la casilla ya está marcada o si aún se está procesando
+                                  * el onTap() ya que si aún las funciones asíncronas no han terminado
+                                  * no voy a dejar al usuario que vuelva a pulsar, antes deben de
+                                  * completarse los datos, aparte comrpobamos que estén los dos
+                                  * jugadores en la sala */
+                                  if (tablero.elementAt(index) != 0 ||
+                                      procesandoOnTap ||
+                                      ((jugador1["nickname"] ?? "") as String)
+                                          .isEmpty ||
+                                      ((jugador2["nickname"] ?? "") as String)
+                                          .isEmpty)
+                                    return;
+                                  // Comprobamos si hay ganador, en caso de que sí, tras pulsar se borra el mensaje y el ganador
+                                  if (indexGanador != 0) {
+                                    // Borramos el ganador de firebase
+                                    await snapshot.data!.reference.update({
+                                      "ganador": "",
+                                    });
+                                  }
+                                  // Si el usuario es el que aparece en el turno podrá pulsar
+                                  if (data.nickname == campos["turno"]) {
+                                    // Enpezamos a procesar los datos
+                                    procesandoOnTap = true;
+                                    // Marcamos el índice y guardamos el índice del ganador
+                                    indexGanador = await marcarCasilla(
+                                      tablero,
+                                      index,
+                                      snapshot.data!.reference,
+                                    );
+                                    // Comprobamos si hay ganador
+                                    await declararGanador(
+                                      snapshot.data!,
+                                      tablero,
+                                    );
+                                    // Cambiamos de turno una vez que el jugador ha pulsado
+                                    await cambioDeTurno(
+                                      campos,
+                                      jugador2["nickname"],
+                                      jugador1["nickname"],
+                                      snapshot.data!.reference,
+                                    );
+                                    // Una vez se han proceso los datos cambiamos
+                                    procesandoOnTap = false;
                                   }
                                 },
                               );
@@ -164,6 +202,57 @@ class _JuegoState extends State<Juego> {
               },
             ),
     );
+  }
+
+  /// Esta función va cambiar el turno
+  /// del usuario al pulsar una casilla
+  Future<void> cambioDeTurno(
+    Map<String, dynamic> campos,
+    String nick2,
+    String nick1,
+    DocumentReference docRef,
+  ) async {
+    // Si el turno es del usuario, se cambia al del oponente
+    if (campos["turno"] == data.nickname) {
+      await docRef.update({"turno": data.nickname == nick1 ? nick2 : nick1});
+      // En caso de que sea del oponente, se pone el del usuario
+    } else {
+      await docRef.update({"turno": data.nickname});
+    }
+  }
+
+  /// Esta función va a marcar la casilla que el usuario pulse, se actualizará
+  /// el el tablero de la base de datos y marca quien es el ganador
+  Future<int> marcarCasilla(
+    List<int> tablero,
+    int indexMarcar,
+    DocumentReference doc,
+  ) async {
+    // Modificamos el tablero anterior
+    // tableroAnterior.replaceRange(indexMarcar, indexMarcar + 1, [data.indexUser]); -> el end no lo incluye
+    tablero[indexMarcar] = data.indexUser; // Sustituye el valor
+    await doc.update({"tablero": tablero});
+    // Ahora comprobamos quién es el ganador y devolvemos su index
+    return LogicaJuego.comprobarGanador(tablero);
+  }
+
+  /// Esta función va a actualizar el campo del ganador para
+  /// mostrar por pantalla y terminar la partida borrando las marcas
+  /// del tablero
+  Future<void> declararGanador(
+    DocumentSnapshot<Object?> doc,
+    List<int> tablero,
+  ) async {
+    if (indexGanador != 0) {
+      // Declaramos al ganador actualizando este campo
+      await doc.reference.update({
+        "ganador":
+            ((doc.data()
+                as Map<String, dynamic>)["jugador$indexGanador"])["nickname"],
+      });
+      // Borramos las marcas del tablero
+      await doc.reference.update({"tablero": tablero.map((e) => 0).toList()});
+    }
   }
 }
 

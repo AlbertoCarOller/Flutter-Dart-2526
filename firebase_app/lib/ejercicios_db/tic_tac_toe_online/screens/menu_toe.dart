@@ -128,8 +128,6 @@ class _MenuToeState extends State<MenuToe> {
     Map<String, dynamic> camposDoc,
     DocumentReference<Object?> doc,
   ) async {
-    // Creamos una variable que va a almacenar si devolver true o false
-    bool devolver = false;
     // Obtenemos los nickname de los 2 jugadores
     String nick1 = (camposDoc["jugador1"] as Map<String, dynamic>)["nickname"];
     String nick2 = (camposDoc["jugador2"] as Map<String, dynamic>)["nickname"];
@@ -137,10 +135,16 @@ class _MenuToeState extends State<MenuToe> {
     if (nick1.isEmpty) {
       // Asiganamos al valor local el número de jugador que somos
       numJugador = 1;
+      // Actaulizamos el valor del índice del usuario en el singleton
+      dataSingleton.indexUser = 1;
       // Actualizamos el nombre del jugador 1
       await doc.update({
         "jugador1": {"nickname": dataSingleton.nickname},
       });
+      /* Actualizamos el turno, debemos de hacerlo aquí, ya que en la pantalla
+       del juego al hacer las comprobaciones no le da tiempo a flutter recibir
+        el update en el tiempo que se nencesita para que la app funcione bien */
+      await doc.update({"turno": dataSingleton.nickname});
       // En caso de que el jugador 2 exista, la sala estará llena
       if (nick2.isNotEmpty) {
         // Cambiamos el estado de la sala
@@ -150,6 +154,8 @@ class _MenuToeState extends State<MenuToe> {
     } else if (nick2.isEmpty) {
       // Asiganamos al valor local el número de jugador que somos
       numJugador = 2;
+      // Actaulizamos el valor del índice del usuario en el singleton
+      dataSingleton.indexUser = 2;
       // Actualizamos el nombre del jugador 2
       await doc.update({
         "jugador2": {"nickname": dataSingleton.nickname},
