@@ -21,7 +21,9 @@ class _InicioNicknameState extends State<InicioNickname> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Inicio")),
+      appBar: AppBar(
+        title: Text("Inicio", semanticsLabel: "Estás en el inicio"),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -29,9 +31,10 @@ class _InicioNicknameState extends State<InicioNickname> {
             Padding(
               padding: const EdgeInsets.only(right: 30, left: 30, bottom: 10),
               child: Card(
-                color: Colors.blue.shade100,
+                color: Colors.blue.shade300,
                 child: TextFormField(
-                  cursorColor: Colors.blue.shade400,
+                  //
+                  cursorColor: Colors.black,
                   key: _nicknameKey,
                   validator: (value) {
                     if (_nickController.text.isEmpty) {
@@ -41,8 +44,8 @@ class _InicioNicknameState extends State<InicioNickname> {
                   },
                   controller: _nickController,
                   decoration: InputDecoration(
-                    labelStyle: TextStyle(color: Colors.blue.shade400),
-                    icon: Icon(Icons.person, color: Colors.blue.shade400),
+                    labelStyle: TextStyle(color: Colors.black),
+                    icon: Icon(Icons.person, color: Colors.black),
                     border: InputBorder.none,
                     label: Text("Introduce el nickname"),
                   ),
@@ -51,8 +54,8 @@ class _InicioNicknameState extends State<InicioNickname> {
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(Colors.blue.shade400),
-                foregroundColor: WidgetStatePropertyAll(Colors.white),
+                backgroundColor: WidgetStatePropertyAll(Colors.blue.shade300),
+                foregroundColor: WidgetStatePropertyAll(Colors.black),
               ),
               onPressed: () {
                 if (_nicknameKey.currentState!.validate()) {

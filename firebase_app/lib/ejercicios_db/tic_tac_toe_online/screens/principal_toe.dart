@@ -20,7 +20,7 @@ class PrincipalToe extends StatelessWidget {
     final tema = ThemeData(
       useMaterial3: true,
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.blue.shade400,
+        backgroundColor: Colors.blue.shade300,
         centerTitle: true,
       ),
     );

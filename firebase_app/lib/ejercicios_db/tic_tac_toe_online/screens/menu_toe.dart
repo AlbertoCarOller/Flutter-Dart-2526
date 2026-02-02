@@ -24,7 +24,13 @@ class _MenuToeState extends State<MenuToe> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Salas de juego")),
+      appBar: AppBar(
+        title: Text(
+          "Salas de juego",
+          // semanticsLabel -> lee lo que está en este apartado
+          semanticsLabel: "Estás en el menú de las salas de juegos",
+        ),
+      ),
       body: salasReference == null
           ? CircularProgressIndicator()
           : StreamBuilder(

@@ -26,6 +26,9 @@ class _JuegoState extends State<Juego> {
   // Cargamos la clase con los datos
   DataSingleton data = DataSingleton();
 
+  // Creamos un scrollController para permitir scroll para aumentar la accesibilidad
+  final sc = ScrollController();
+
   // Cargamos los datos
   @override
   void didChangeDependencies() {
@@ -90,111 +93,115 @@ class _JuegoState extends State<Juego> {
                       campos["jugador2"] as Map<String, dynamic>;
                   // Obtenemos los datos del tablero
                   List<int> tablero = List.from(campos["tablero"]);
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 40),
-                          // Mostramos el texto con el turno que corresponda
-                          child: Text(
-                            hayJugadores(jugador1, jugador2)
-                                ? "Turno de ${campos["turno"]}"
-                                : "Esperando rival...",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.blue.shade400,
+                  return SingleChildScrollView(
+                    // Hacemos scrollabe la pantalla de juego por si aumenta el tamaño de la fuente
+                    controller: sc,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 40),
+                            // Mostramos el texto con el turno que corresponda
+                            child: Text(
+                              hayJugadores(jugador1, jugador2)
+                                  ? "Turno de ${campos["turno"]}"
+                                  : "Esperando rival...",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.blue.shade400,
+                              ),
                             ),
                           ),
-                        ),
-                        // La GridView, el tablero de juego
-                        SizedBox(
-                          width: 250,
-                          height: 250,
-                          child: GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                ),
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                child: Card(
-                                  color: Colors.blue.shade200,
-                                  // Comprobamos si está marcada o no por ek jugador 1 para poner un círculo
-                                  child: tablero.elementAt(index) == 1
-                                      ? Icon(
-                                          Icons.circle_outlined,
-                                          color: Colors.white,
-                                        )
-                                      // En caso de que el tablero en ese índice tenga 2 se marca con x
-                                      : tablero.elementAt(index) == 2
-                                      ? Icon(Icons.clear, color: Colors.white)
-                                      : Text(""),
-                                ),
-                                // Al pulsar se marca
-                                onTap: () async {
-                                  /* Comprobamos que no se pueda hacer onTap(), comprobamos
-                                  * si la casilla ya está marcada o si aún se está procesando
-                                  * el onTap() ya que si aún las funciones asíncronas no han terminado
-                                  * no voy a dejar al usuario que vuelva a pulsar, antes deben de
-                                  * completarse los datos, aparte comrpobamos que estén los dos
-                                  * jugadores en la sala */
-                                  if (tablero.elementAt(index) != 0 &&
-                                      procesandoOnTap &&
-                                      ((jugador1["nickname"] ?? "") as String)
-                                          .isNotEmpty &&
-                                      ((jugador2["nickname"] ?? "") as String)
-                                          .isNotEmpty) {}
-                                  // Comprobamos si hay ganador, en caso de que sí, tras pulsar se borra el mensaje y el ganador
-                                  if (indexGanador != 0) {
-                                    // Borramos el ganador de firebase
-                                    await snapshot.data!.reference.update({
-                                      "ganador": "",
-                                    });
-                                  }
-                                  // Si el usuario es el que aparece en el turno podrá pulsar
-                                  if (data.nickname == campos["turno"]) {
-                                    // Enpezamos a procesar los datos
-                                    procesandoOnTap = true;
-                                    // Marcamos el índice y guardamos el índice del ganador
-                                    indexGanador = await marcarCasilla(
-                                      tablero,
-                                      index,
-                                      snapshot.data!.reference,
-                                    );
-                                    // Comprobamos si hay ganador
-                                    await declararGanador(
-                                      snapshot.data!,
-                                      tablero,
-                                    );
-                                    // Cambiamos de turno una vez que el jugador ha pulsado
-                                    await cambioDeTurno(
-                                      campos,
-                                      jugador2["nickname"],
-                                      jugador1["nickname"],
-                                      snapshot.data!.reference,
-                                    );
-                                    // Una vez se han proceso los datos cambiamos
-                                    procesandoOnTap = false;
-                                  }
-                                },
-                              );
-                            },
-                            // El tamaño de la lista (del tablero)
-                            itemCount: tablero.length,
+                          // La GridView, el tablero de juego
+                          SizedBox(
+                            width: 250,
+                            height: 250,
+                            child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                  ),
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  child: Card(
+                                    color: Colors.blue.shade200,
+                                    // Comprobamos si está marcada o no por ek jugador 1 para poner un círculo
+                                    child: tablero.elementAt(index) == 1
+                                        ? Icon(
+                                            Icons.circle_outlined,
+                                            color: Colors.white,
+                                          )
+                                        // En caso de que el tablero en ese índice tenga 2 se marca con x
+                                        : tablero.elementAt(index) == 2
+                                        ? Icon(Icons.clear, color: Colors.white)
+                                        : Text(""),
+                                  ),
+                                  // Al pulsar se marca
+                                  onTap: () async {
+                                    /* Comprobamos que no se pueda hacer onTap(), comprobamos
+                                    * si la casilla ya está marcada o si aún se está procesando
+                                    * el onTap() ya que si aún las funciones asíncronas no han terminado
+                                    * no voy a dejar al usuario que vuelva a pulsar, antes deben de
+                                    * completarse los datos, aparte comrpobamos que estén los dos
+                                    * jugadores en la sala */
+                                    if (tablero.elementAt(index) != 0 &&
+                                        procesandoOnTap &&
+                                        ((jugador1["nickname"] ?? "") as String)
+                                            .isNotEmpty &&
+                                        ((jugador2["nickname"] ?? "") as String)
+                                            .isNotEmpty) {}
+                                    // Comprobamos si hay ganador, en caso de que sí, tras pulsar se borra el mensaje y el ganador
+                                    if (indexGanador != 0) {
+                                      // Borramos el ganador de firebase
+                                      await snapshot.data!.reference.update({
+                                        "ganador": "",
+                                      });
+                                    }
+                                    // Si el usuario es el que aparece en el turno podrá pulsar
+                                    if (data.nickname == campos["turno"]) {
+                                      // Enpezamos a procesar los datos
+                                      procesandoOnTap = true;
+                                      // Marcamos el índice y guardamos el índice del ganador
+                                      indexGanador = await marcarCasilla(
+                                        tablero,
+                                        index,
+                                        snapshot.data!.reference,
+                                      );
+                                      // Comprobamos si hay ganador
+                                      await declararGanador(
+                                        snapshot.data!,
+                                        tablero,
+                                      );
+                                      // Cambiamos de turno una vez que el jugador ha pulsado
+                                      await cambioDeTurno(
+                                        campos,
+                                        jugador2["nickname"],
+                                        jugador1["nickname"],
+                                        snapshot.data!.reference,
+                                      );
+                                      // Una vez se han proceso los datos cambiamos
+                                      procesandoOnTap = false;
+                                    }
+                                  },
+                                );
+                              },
+                              // El tamaño de la lista (del tablero)
+                              itemCount: tablero.length,
+                            ),
                           ),
-                        ),
-                        // Texto que muestra si hay ganador
-                        Padding(
-                          padding: const EdgeInsets.only(top: 40),
-                          child: Text(
-                            ((campos["ganador"] ?? "") as String).isEmpty
-                                ? ""
-                                : "Felicidades ${campos["ganador"]} has ganado!!🎉",
-                            style: TextStyle(color: Colors.blue.shade400),
+                          // Texto que muestra si hay ganador
+                          Padding(
+                            padding: const EdgeInsets.only(top: 40),
+                            child: Text(
+                              ((campos["ganador"] ?? "") as String).isEmpty
+                                  ? ""
+                                  : "Felicidades ${campos["ganador"]} has ganado!!🎉",
+                              style: TextStyle(color: Colors.blue.shade400),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 }
