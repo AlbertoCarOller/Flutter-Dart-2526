@@ -33,7 +33,6 @@ class _InicioNicknameState extends State<InicioNickname> {
               child: Card(
                 color: Colors.blue.shade300,
                 child: TextFormField(
-                  //
                   cursorColor: Colors.black,
                   key: _nicknameKey,
                   validator: (value) {
