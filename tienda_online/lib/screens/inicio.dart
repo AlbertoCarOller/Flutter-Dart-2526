@@ -11,35 +11,50 @@ class _InicioState extends State<Inicio> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      // Un Stack para poner de fondo una imagen
+      body: Stack(
         children: [
-          Expanded(
-            // La parte que contiene el logo de la app
-            child: Container(
-              alignment: Alignment.center,
-              child: Image.asset(
-                "assets/images/logoKivoCompleto.png",
-                scale: 2,
-              ),
+          // Le ponemos una opacidad del 30% a la imagen
+          Opacity(
+            opacity: 0.3,
+            child: Image.asset(
+              "assets/images/fondoKivon.png",
+              // Le ponemos cover para que la imagen cubra toda la pantalla sin deformarse
+              fit: BoxFit.cover,
+              // Para que cubra toda la pantalla
+              width: double.infinity,
+              height: double.infinity,
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 30, left: 30, top: 20),
-                child: Column(
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset("assets/images/logoKivoCompleto.png", scale: 2),
+                Column(
                   children: [
-                    // Bbotón de inicio de sesión
+                    // Botón de inicio de sesión
                     Padding(
                       padding: const EdgeInsets.only(bottom: 6),
                       child: Container(
+                        decoration: BoxDecoration(
+                          // Ponemos los bordes de forma más circular
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          // El gradient es un atributo para combinar mediante degradado dos o más colores
+                          gradient: LinearGradient(
+                            // Donde empieza el color
+                            begin: Alignment.topLeft,
+                            // Donde termina el color
+                            end: Alignment.bottomRight,
+                            // Los colores que van a ser degradados
+                            colors: [Colors.black, Colors.grey.shade600],
+                          ),
+                        ),
                         width: 350,
-                        color: Colors.black,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/login");
+                          },
                           child: Text(
                             "Iniciar sesión",
                             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -50,9 +65,18 @@ class _InicioState extends State<Inicio> {
                     // Botón de registrarse
                     Container(
                       width: 350,
-                      color: Colors.black,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Colors.grey.shade600, Colors.black],
+                        ),
+                      ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/register");
+                        },
                         child: Text(
                           "Registrarte",
                           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -61,7 +85,7 @@ class _InicioState extends State<Inicio> {
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
           ),
         ],
