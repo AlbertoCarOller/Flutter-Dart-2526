@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tienda_online/provider/user_provider.dart';
 
-import '../commons.dart';
+import '../utils/commons.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -79,7 +80,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
                   width: 150,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await UserProvider.iniciarSesion(
+                        _controllerEmail.text,
+                        _controllerPassword.text,
+                        // Le pasamos el context para poder mostrar el SnackBar
+                        this.context,
+                      );
+                    },
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.white),
                       foregroundColor: WidgetStatePropertyAll(Colors.purple),

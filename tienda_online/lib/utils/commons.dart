@@ -43,8 +43,8 @@ class _TextFieldPersonalizadoState extends State<TextFieldPersonalizado> {
                   });
                 },
                 icon: visible == true
-                    ? Icon(Icons.visibility)
-                    : Icon(Icons.visibility_off),
+                    ? Icon(Icons.visibility_off)
+                    : Icon(Icons.visibility),
               )
             : null,
         filled: true,
