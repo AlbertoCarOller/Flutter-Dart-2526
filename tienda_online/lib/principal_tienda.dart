@@ -5,6 +5,8 @@ import 'package:tienda_online/firebase_options.dart';
 import 'package:tienda_online/screens/inicio.dart';
 import 'package:tienda_online/screens/login_screen.dart';
 import 'package:tienda_online/screens/register_screen.dart';
+import 'package:tienda_online/screens/tienda_screen.dart';
+import 'package:tienda_online/utils/first_screen.dart';
 
 void main() async {
   // Contruimos el puente entre Flutter y Dart antes de iniciar el runApp()
@@ -22,6 +24,7 @@ class PrincipalTienda extends StatelessWidget {
       useMaterial3: true,
       // La tipografía
       textTheme: GoogleFonts.aBeeZeeTextTheme(),
+      appBarTheme: AppBarTheme(centerTitle: true),
     );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -29,9 +32,11 @@ class PrincipalTienda extends StatelessWidget {
       theme: tema,
       initialRoute: "/",
       routes: {
-        "/": (context) => Inicio(),
+        // Decidimos donde viajamos dependiendo de si está o no logueado el usuario
+        "/": (context) => FirstScreen(),
         "/login": (context) => LoginScreen(),
         "/register": (context) => RegisterScreen(),
+        "/tienda_screen": (context) => TiendaScreen(),
       },
     );
   }

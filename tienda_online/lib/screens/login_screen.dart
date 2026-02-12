@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tienda_online/provider/user_provider.dart';
 
+import '../utils/functions.dart';
 import '../utils/commons.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,6 +14,9 @@ class _LoginScreenState extends State<LoginScreen> {
   // Creamos los controllers
   final _controllerEmail = TextEditingController();
   final _controllerPassword = TextEditingController();
+
+  // Creamos una variable bandera para ver que podamos pasar de pantalla
+  bool usuarioIniciado = false;
 
   @override
   void initState() {
@@ -71,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? "Introduce el email"
                           : "Introduce la contraseña",
                       tipo: i == 0 ? "email_validator" : "password_validator",
-                      igualReplica: false,
+                      controllerPassword: _controllerPassword,
                     ),
                   ),
                 ),
@@ -81,12 +84,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 150,
                   child: TextButton(
                     onPressed: () async {
-                      await UserProvider.iniciarSesion(
-                        _controllerEmail.text,
-                        _controllerPassword.text,
-                        // Le pasamos el context para poder mostrar el SnackBar
-                        this.context,
-                      );
+                      // Comprobamos que estén bien los campos
+                      if (_formKey.currentState!.validate()) {
+                        usuarioIniciado = await iniciarSesion(
+                          _controllerEmail.text,
+                          _controllerPassword.text,
+                          // Le pasamos el context para poder mostrar el SnackBar
+                          this.context,
+                        ).then((value) => value != null);
+                      }
+                      // Comprobamos que esté en el stack
+                      if (mounted) {
+                        // Comprobamos que sea la pantalla actual
+                        if (ModalRoute.of(this.context)!.isCurrent) {
+                          // En caso de que el usuario sea distinto de null, viajamos a la screen de la tienda
+                          if (usuarioIniciado) {
+                            // Volvemos hacia atrás, ya que si tenemos usuario debe ser la pantalla de la tienda
+                            Navigator.pop(this.context);
+                          }
+                        }
+                      }
                     },
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.white),

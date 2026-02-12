@@ -9,14 +9,14 @@ class TextFieldPersonalizado extends StatefulWidget {
   final String tipo;
 
   // Este solo sirve para comporbar que en la replica del password asegurarnos que los passwords son los mismos
-  final bool igualReplica;
+  final TextEditingController controllerPassword;
 
   const TextFieldPersonalizado({
     super.key,
     required this.controller,
     required this.label,
     required this.tipo,
-    required this.igualReplica,
+    required this.controllerPassword,
   });
 
   @override
@@ -69,7 +69,8 @@ class _TextFieldPersonalizadoState extends State<TextFieldPersonalizado> {
                 : null;
           // En caso de que sea la réplica del password
           case "replica_password":
-            mensajeTemporal = widget.igualReplica == false
+            mensajeTemporal =
+                widget.controller.text != widget.controllerPassword.text
                 ? "La contraseña debe ser la misma"
                 : null;
           // En caso de que el tipo sea caulquier otra cosa, solo se valida que no esté vacío

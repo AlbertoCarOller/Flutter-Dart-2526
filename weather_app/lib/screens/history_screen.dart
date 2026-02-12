@@ -33,7 +33,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 * esta pantalla sigue montada, es decir si el usuario le da a otros
                 * botones externos a este y vuelve atrás, al hacer el pop dará error
                 * porque el context ya no estará montado, por eso nos aseguramos antes,
-                * OJO LA PANTALLA ESTARÑA MONTADA SIEMPRE QUE ESTÉ DENTRO DEL STACK */
+                * OJO LA PANTALLA ESTARÁ MONTADA SIEMPRE QUE ESTÉ DENTRO DEL STACK */
                 if (context.mounted) {
                   /* Bien ya sabemos que la pantalla está en el Stack, PERO NO QUE SEA LA ÚLTIMA, LA ACTIVA AHORA,
                   * por lo que si monto otra pantalla encima al hacer el pop quitará la última del Stack para cuando

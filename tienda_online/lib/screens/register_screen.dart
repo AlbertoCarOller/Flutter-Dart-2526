@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tienda_online/utils/commons.dart';
-import 'package:tienda_online/provider/user_provider.dart';
+
+import '../utils/functions.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -84,9 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           : i == 1
                           ? "password_validator"
                           : "replica_password",
-                      igualReplica:
-                          _controllerPassword.text ==
-                          _controllerReplicaPassword.text,
+                      controllerPassword: _controllerPassword,
                     ),
                   ),
                 ),
@@ -98,9 +96,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Al pulsar creamos una cuenta
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        await UserProvider.registrarse(
+                        await registrarse(
                           _controllerEmail.text,
                           _controllerPassword.text,
+                          this.context,
                         );
                       }
                     },
