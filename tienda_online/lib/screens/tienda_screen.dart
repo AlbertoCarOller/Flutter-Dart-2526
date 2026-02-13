@@ -102,7 +102,7 @@ class GridViewProducts extends StatelessWidget {
         maxCrossAxisExtent: 300,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        mainAxisExtent: 400
+        mainAxisExtent: 400,
       ),
 
       itemBuilder: (context, index) {
@@ -114,30 +114,19 @@ class GridViewProducts extends StatelessWidget {
               colors: [Colors.grey.shade300, Colors.purple.shade600],
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Cargamos la imagen del prodcuto, en caso de que no esté aún cargamos el fondo
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Image.network(
-                  productos[index].image ??
-                      "assets/images/kivonLogoSinFondo.png",
-                  scale: 5,
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(10),
+            child: Stack(
+              children: [
+                Center(child: Image.network(productos[index].image!, scale: 3)),
+                Text(productos[index].title!),
+                Positioned(
+                  bottom: 1,
+                  right: 1,
+                  child: Text("${productos[index].price!} €"),
                 ),
-              ),
-              Text(
-                productos[index].title ?? "No disponible",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
-              ),
-              // El precio del produto
-              Text(
-                "Precio: ${productos[index].price ?? "No disponible"}",
-                style: TextStyle(fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
