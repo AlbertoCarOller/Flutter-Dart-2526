@@ -20,12 +20,7 @@ class FirstScreen extends StatelessWidget {
         // En caso de que todavía no hayan llegado los datos, se muestra una espera
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Usamos el efecto de cargando de huesos
-          return Skeletonizer(
-            // Activamos el efecto de huesos
-            enabled: true,
-            // Como diseño de la carga tomamos la TiendaScreen
-            child: TiendaScreen(),
-          );
+         return Center(child: CircularProgressIndicator(),);
         }
         // En caso de que haya datos (exista un usuario logueado)
         if (snapshot.hasData || snapshot.data != null) {

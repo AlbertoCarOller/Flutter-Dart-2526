@@ -36,7 +36,7 @@ class PrincipalTienda extends StatelessWidget {
         "/": (context) => FirstScreen(),
         "/login": (context) => LoginScreen(),
         "/register": (context) => RegisterScreen(),
-        "/tienda_screen": (context) => TiendaScreen(),
+        //"/tienda_screen": (context) => TiendaScreen(),
       },
     );
   }
