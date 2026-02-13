@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tienda_online/screens/inicio.dart';
 import 'package:tienda_online/screens/tienda_screen.dart';
 

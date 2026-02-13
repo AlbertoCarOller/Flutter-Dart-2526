@@ -43,12 +43,17 @@ class _TiendaScreenState extends State<TiendaScreen> {
       ),
       // FutureBuilder para indicar que el bloque (el GridView) debe aparecer cuando haya cargado 'cargarProductos'
       body: FutureBuilder(
+        // A future le indicamos que se va a construir cuando termine 'cargarProductos'
         future: cargarProductos(),
         builder: (context, snapshot) {
+          // Si aún está esperando se muestra el Skeletonizer
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Skeletonizer(
+              // Se muestra el efecto
               enabled: true,
+              // Se muestra el esquema de un GridView
               child: GridView.builder(
+                itemCount: 20,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisSpacing: 2,
                   crossAxisCount: 5,
@@ -56,6 +61,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
                 itemBuilder: (context, index) => Container(),
               ),
             );
+            // En caso de que hayan cargado los datos se muestra el GridView de los productos
           } else {
             return GridViewProducts(productos: productos);
           }
@@ -83,7 +89,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
   }
 }
 
-/// El GridViw que contien los productos cargados de la API
+/// El GridViw que contiene los productos cargados de la API
 class GridViewProducts extends StatelessWidget {
   const GridViewProducts({super.key, required this.productos});
 
@@ -92,10 +98,13 @@ class GridViewProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: 2,
-        crossAxisCount: 3,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        mainAxisExtent: 400
       ),
+
       itemBuilder: (context, index) {
         return Container(
           decoration: BoxDecoration(
@@ -114,7 +123,7 @@ class GridViewProducts extends StatelessWidget {
                 child: Image.network(
                   productos[index].image ??
                       "assets/images/kivonLogoSinFondo.png",
-                  scale: 6,
+                  scale: 5,
                 ),
               ),
               Text(

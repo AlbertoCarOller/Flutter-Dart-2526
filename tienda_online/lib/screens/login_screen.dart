@@ -102,7 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           // En caso de que el usuario sea distinto de null, viajamos a la screen de la tienda
                           if (usuarioIniciado) {
                             // Volvemos hacia atrás, ya que si tenemos usuario debe ser la pantalla de la tienda
-                            Navigator.pop(this.context);
+                            //Navigator.pop(this.context);
+                            // Viajamos a la TiendaScreen pero esta vez hacia adelante
+                            Navigator.pushReplacementNamed(this.context, "/");
                           }
                         }
                       }

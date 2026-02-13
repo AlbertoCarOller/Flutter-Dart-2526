@@ -96,11 +96,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Al pulsar creamos una cuenta
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        // Se crea la cuenta del usuario
                         await registrarse(
                           _controllerEmail.text,
                           _controllerPassword.text,
                           this.context,
                         );
+                        if (mounted) {
+                          if (ModalRoute.of(this.context)!.isCurrent) {
+                            // Navegamos a TiendaScreen
+                            Navigator.pushReplacementNamed(this.context, "/");
+                          }
+                        }
                       }
                     },
                     style: ButtonStyle(
