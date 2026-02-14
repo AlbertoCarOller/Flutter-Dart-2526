@@ -55,30 +55,41 @@ class _TiendaScreenState extends State<TiendaScreen> {
         actions: [IconButton(onPressed: () {}, icon: Icon(Icons.person))],
       ),
       // FutureBuilder para indicar que el bloque (el GridView) debe aparecer cuando haya cargado 'cargarProductos'
-      body: FutureBuilder(
-        // A future le indicamos que se va a construir cuando termine 'cargarProductos'
-        future: cargarProductos(categoriaActual),
-        builder: (context, snapshot) {
-          // Si aún está esperando se muestra el Skeletonizer
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Skeletonizer(
-              // Se muestra el efecto
-              enabled: true,
-              // Se muestra el esquema de un GridView
-              child: GridView.builder(
-                itemCount: 20,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisSpacing: 2,
-                  crossAxisCount: 5,
-                ),
-                itemBuilder: (context, index) => Container(),
-              ),
-            );
-            // En caso de que hayan cargado los datos se muestra el GridView de los productos
-          } else {
-            return GridViewProducts(productos: productos);
-          }
-        },
+      body: Column(
+        children: [
+          FutureBuilder(
+            // A future le indicamos que se va a construir cuando termine 'cargarProductos'
+            future: cargarProductos(categoriaActual),
+            builder: (context, snapshot) {
+              // Si aún está esperando se muestra el Skeletonizer
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Skeletonizer(
+                  // Se muestra el efecto
+                  enabled: true,
+                  // Se muestra el esquema de un GridView
+                  child: GridView.builder(
+                    itemCount: 20,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisSpacing: 2,
+                      crossAxisCount: 5,
+                    ),
+                    itemBuilder: (context, index) => Container(),
+                  ),
+                );
+                // En caso de que hayan cargado los datos se muestra el GridView de los productos
+              } else {
+                return GridViewProducts(productos: productos);
+              }
+            },
+          ),
+          FutureBuilder(future: cargarProductos(categoriaActual), builder: (context, snapshot) {
+            if(snapshot.connectionState == ConnectionState.waiting) {
+              // TODO: devolver el skeletonizer
+            } else {
+              // TODO: devolver la Row de categorías
+            }
+          },)
+        ],
       ),
     );
   }
