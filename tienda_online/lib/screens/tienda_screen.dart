@@ -82,13 +82,56 @@ class _TiendaScreenState extends State<TiendaScreen> {
               }
             },
           ),
-          FutureBuilder(future: cargarProductos(categoriaActual), builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.waiting) {
-              // TODO: devolver el skeletonizer
-            } else {
-              // TODO: devolver la Row de categorías
-            }
-          },)
+          FutureBuilder(
+            future: cargarProductos(categoriaActual),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Skeletonizer(
+                  enabled: true,
+                  child: Row(
+                    children: List.generate(
+                      8,
+                      (index) => TextButton(onPressed: () {}, child: Text("")),
+                    ),
+                  ),
+                );
+              } else {
+                // Creamos una lista que va a almacenar todas las categorías no repetidas
+                List<String> listCategorias = productos
+                    .map((e) => e.category ?? "")
+                    .where((element) => element.isNotEmpty)
+                    .toSet()
+                    .toList();
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: scrollController,
+                  child: Row(
+                    spacing: 4,
+                    children: [
+                      // Al presional el botón cambiamos la categoría actual
+                      TextButton(
+                        onPressed: () {
+                          categoriaActual = "";
+                        },
+                        child: Text("Todos"),
+                      ),
+                      // Transformamos a un Set la lista para quedarnos con los no repetidos
+                      for (int i = 0; i < listCategorias.length; i++)
+                        TextButton(
+                          // Al presionar filtra por categoría los productos
+                          onPressed: () {
+                            setState(() {
+                              categoriaActual = listCategorias.elementAt(i);
+                            });
+                          },
+                          child: Text(listCategorias.elementAt(i)),
+                        ),
+                    ],
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
@@ -120,8 +163,6 @@ class _TiendaScreenState extends State<TiendaScreen> {
       print(productos);
     }
   }
-
-  void cambiarCategoria() {}
 }
 
 /// El GridViw que contiene los productos cargados de la API
@@ -166,42 +207,6 @@ class GridViewProducts extends StatelessWidget {
         );
       },
       itemCount: productos.length,
-    );
-  }
-}
-
-// TODO: pasar al cuerpo principal en su propio FutureBuilder
-class RowFilter extends StatelessWidget {
-  final ScrollController sc;
-  final List<Producto> productos;
-
-  const RowFilter({super.key, required this.sc, required this.productos});
-
-  @override
-  Widget build(BuildContext context) {
-    // Creamos una lista que va a almacenar todas las categorías no repetidas
-    List<String> listCategorias = productos
-        .map((e) => e.category ?? "")
-        .where((element) => element.isNotEmpty)
-        .toSet()
-        .toList();
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      controller: sc,
-      child: Row(
-        spacing: 4,
-        children: [
-          // Al presional el botón cambiamos la categoría actual
-          TextButton(onPressed: () {}, child: Text("Todos")),
-          // Transformamos a un Set la lista para quedarnos con los no repetidos
-          for (int i = 0; i < listCategorias.length; i++)
-            TextButton(
-              // Al presionar filtra por categoría los productos
-              onPressed: () {},
-              child: Text(listCategorias.elementAt(i)),
-            ),
-        ],
-      ),
     );
   }
 }
