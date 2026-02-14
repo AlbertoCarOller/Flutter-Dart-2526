@@ -15,10 +15,23 @@ class _TiendaScreenState extends State<TiendaScreen> {
   // Creamos una variable que va a almacenar los productos desde la API
   List<Producto> productos = [];
 
+  // Creamos una variable que va a alamcenar la categoría actual
+  String categoriaActual = "";
+
+  // Creamos el ScrollController
+  ScrollController scrollController = ScrollController();
+
   // Creamos un initState para cargar el mapa de prductos
   @override
   void initState() {
     super.initState();
+    scrollController.addListener(() => print(scrollController.position.pixels));
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,7 +57,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
       // FutureBuilder para indicar que el bloque (el GridView) debe aparecer cuando haya cargado 'cargarProductos'
       body: FutureBuilder(
         // A future le indicamos que se va a construir cuando termine 'cargarProductos'
-        future: cargarProductos(),
+        future: cargarProductos(categoriaActual),
         builder: (context, snapshot) {
           // Si aún está esperando se muestra el Skeletonizer
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -72,7 +85,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
 
   /// Esta función va a cargar los productos en una lista
   /// desde la API
-  Future<void> cargarProductos() async {
+  Future<void> cargarProductos(String categoria) async {
     // Primero mediante la URL cargamos en un mapa los datos de la API
     final response = await http.get(
       Uri.parse("https://fakestoreapi.com/products"),
@@ -82,11 +95,22 @@ class _TiendaScreenState extends State<TiendaScreen> {
       // Cargamos el JSON en una lista porque empieza por '[]' la API
       List<dynamic> list = jsonDecode(response.body);
       // Recorremos la lista de mapas, cada mapa es un producto
-      productos = list.map((e) => Producto.fromJson(e)).toList();
+      // En caso de que la categoría este vacía, se muestran todos los productos
+      if (categoria.isEmpty) {
+        productos = list.map((e) => Producto.fromJson(e)).toList();
+        // En caso de que haya categoría se muestran las de esa categoría
+      } else {
+        productos = list
+            .map((e) => Producto.fromJson(e))
+            .where((element) => element.category == categoria)
+            .toList();
+      }
 
       print(productos);
     }
   }
+
+  void cambiarCategoria() {}
 }
 
 /// El GridViw que contiene los productos cargados de la API
@@ -131,6 +155,42 @@ class GridViewProducts extends StatelessWidget {
         );
       },
       itemCount: productos.length,
+    );
+  }
+}
+
+// TODO: pasar al cuerpo principal en su propio FutureBuilder
+class RowFilter extends StatelessWidget {
+  final ScrollController sc;
+  final List<Producto> productos;
+
+  const RowFilter({super.key, required this.sc, required this.productos});
+
+  @override
+  Widget build(BuildContext context) {
+    // Creamos una lista que va a almacenar todas las categorías no repetidas
+    List<String> listCategorias = productos
+        .map((e) => e.category ?? "")
+        .where((element) => element.isNotEmpty)
+        .toSet()
+        .toList();
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      controller: sc,
+      child: Row(
+        spacing: 4,
+        children: [
+          // Al presional el botón cambiamos la categoría actual
+          TextButton(onPressed: () {}, child: Text("Todos")),
+          // Transformamos a un Set la lista para quedarnos con los no repetidos
+          for (int i = 0; i < listCategorias.length; i++)
+            TextButton(
+              // Al presionar filtra por categoría los productos
+              onPressed: () {},
+              child: Text(listCategorias.elementAt(i)),
+            ),
+        ],
+      ),
     );
   }
 }
