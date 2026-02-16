@@ -33,6 +33,7 @@ class _InicioState extends State<Inicio> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
+                  // Dependiendo del modo en el que esté cambiamos la iamgen, como efecto rebote de la repintada al cambiar el tema
                   context.watch<TemaProvider>().temaActual == ThemeMode.light
                       ? "assets/images/logoKivoCompleto.png"
                       : "assets/images/logoCompletoKivonBlanco.png",
