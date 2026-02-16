@@ -105,7 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (mounted) {
                           if (ModalRoute.of(this.context)!.isCurrent) {
                             // Navegamos a TiendaScreen
-                            Navigator.pushReplacementNamed(this.context, "/");
+                            Navigator.pop(this.context);
                           }
                         }
                       }

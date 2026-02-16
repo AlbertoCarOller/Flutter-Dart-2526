@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tienda_online/provider/TemaProvider.dart';
 
 class Inicio extends StatefulWidget {
   const Inicio({super.key});
@@ -30,7 +32,12 @@ class _InicioState extends State<Inicio> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset("assets/images/logoKivoCompleto.png", scale: 2),
+                Image.asset(
+                  context.watch<TemaProvider>().temaActual == ThemeMode.light
+                      ? "assets/images/logoKivoCompleto.png"
+                      : "assets/images/logoCompletoKivonBlanco.png",
+                  scale: 2,
+                ),
                 Column(
                   children: [
                     // Botón de inicio de sesión
@@ -47,8 +54,9 @@ class _InicioState extends State<Inicio> {
                             // Donde termina el color
                             end: Alignment.bottomRight,
                             // Los colores que van a ser degradados
-                            colors: [Colors.black, Colors.grey.shade600],
+                            colors: [Colors.grey, Colors.black],
                           ),
+                          border: BoxBorder.all(color: Colors.white),
                         ),
                         width: 350,
                         child: TextButton(
@@ -70,8 +78,9 @@ class _InicioState extends State<Inicio> {
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [Colors.grey.shade600, Colors.black],
+                          colors: [Colors.black, Colors.grey],
                         ),
+                        border: BoxBorder.all(color: Colors.white),
                       ),
                       child: TextButton(
                         onPressed: () {

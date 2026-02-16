@@ -34,23 +34,23 @@ class _TextFieldPersonalizadoState extends State<TextFieldPersonalizado> {
       // Si es visible o no
       obscureText: visible,
       decoration: InputDecoration(
-        icon: widget.tipo.contains("password") == true
-            ? IconButton(
-                // Al pulsar cambiamos el estado para que sea visible la contraseña
-                onPressed: () {
-                  setState(() {
-                    visible = !visible;
-                  });
-                },
-                icon: visible == true
-                    ? Icon(Icons.visibility_off)
-                    : Icon(Icons.visibility),
-              )
-            : null,
         filled: true,
         fillColor: Colors.white,
         hint: Text(widget.label),
         border: OutlineInputBorder(),
+        prefixIcon: widget.tipo.contains("password") == true
+            ? IconButton(
+          // Al pulsar cambiamos el estado para que sea visible la contraseña
+          onPressed: () {
+            setState(() {
+              visible = !visible;
+            });
+          },
+          icon: visible == true
+              ? Icon(Icons.visibility_off)
+              : Icon(Icons.visibility),
+        )
+            : null,
       ),
       validator: (value) {
         String? mensajeTemporal = "";
