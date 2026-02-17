@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tienda_online/firebase_options.dart';
 import 'package:tienda_online/provider/TemaProvider.dart';
 import 'package:tienda_online/screens/login_screen.dart';
+import 'package:tienda_online/screens/producto_screen.dart';
 import 'package:tienda_online/screens/register_screen.dart';
 import 'package:tienda_online/utils/first_screen.dart';
 
@@ -80,6 +81,7 @@ class _PrincipalTiendaState extends State<PrincipalTienda> {
         "/": (context) => FirstScreen(),
         "/login": (context) => LoginScreen(),
         "/register": (context) => RegisterScreen(),
+        "/producto_screen": (context) => ProductoScreen(),
         //"/tienda_screen": (context) => TiendaScreen(),
       },
     );

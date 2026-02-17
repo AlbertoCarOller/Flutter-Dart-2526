@@ -253,67 +253,75 @@ class GridViewProducts extends StatelessWidget {
       ),
 
       itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [Colors.grey.shade300, Colors.purple.shade600],
-            ),
+        return GestureDetector(
+          // Navegamos a la pantalla del producto concreto
+          onTap: () => Navigator.pushNamed(
+            context,
+            "/producto_screen",
+            arguments: productos.elementAt(index),
           ),
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(10),
-            child: Stack(
-              children: [
-                // Positiones.fill() -> Crea un Positioned con todos los lados a 0, queda en el centro
-                Positioned.fill(
-                  // BoxFit.contain -> Ocupa el espacio completo del Container sin deformarse
-                  child: Image.network(
-                    productos[index].image!,
-                    fit: BoxFit.contain,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Colors.grey.shade300, Colors.purple.shade600],
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(10),
+              child: Stack(
+                children: [
+                  // Positiones.fill() -> Crea un Positioned con todos los lados a 0, queda en el centro
+                  Positioned.fill(
+                    // BoxFit.contain -> Ocupa el espacio completo del Container sin deformarse
+                    child: Image.network(
+                      productos[index].image!,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                Positioned(
-                  bottom: 1,
-                  right: 0,
-                  left: 0,
-                  child: Container(
-                    color: Colors.black54,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 4,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            productos[index].title!,
-                            style: TextStyle(
-                              color: Colors.white,
+                  Positioned(
+                    bottom: 1,
+                    right: 0,
+                    left: 0,
+                    child: Container(
+                      color: Colors.black54,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 4,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              productos[index].title!,
+                              style: TextStyle(
+                                color: Colors.white,
+                                // extOverflow.ellipsis -> Hace que cuando haya overflow se pongan '...'
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              // El máximo de líneas que puede ocupar el texto
+                              maxLines: 1,
+                            ),
+                            Text(
+                              "${productos[index].price!} €",
                               // extOverflow.ellipsis -> Hace que cuando haya overflow se pongan '...'
                               overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
                             ),
-                            // El máximo de líneas que puede ocupar el texto
-                            maxLines: 1,
-                          ),
-                          Text(
-                            "${productos[index].price!} €",
-                            // extOverflow.ellipsis -> Hace que cuando haya overflow se pongan '...'
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 1,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
