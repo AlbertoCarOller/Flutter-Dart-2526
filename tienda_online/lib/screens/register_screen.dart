@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tienda_online/utils/commons.dart';
 
@@ -102,6 +104,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           _controllerPassword.text,
                           this.context,
                         );
+                        // Creamos el document del usuario
+                        await crearInfoUser(FirebaseFirestore.instance.collection("informacion"));
                         if (mounted) {
                           if (ModalRoute.of(this.context)!.isCurrent) {
                             // Navegamos a TiendaScreen

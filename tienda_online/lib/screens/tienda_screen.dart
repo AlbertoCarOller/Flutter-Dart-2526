@@ -57,7 +57,10 @@ class _TiendaScreenState extends State<TiendaScreen> {
             backgroundColor: WidgetStatePropertyAll(Colors.black54),
             foregroundColor: WidgetStatePropertyAll(Colors.white),
           ),
-          onPressed: () {},
+          // Navegamos hasta la pantalla del carrito
+          onPressed: () {
+            Navigator.pushNamed(context, "/carro_screen");
+          },
           icon: Icon(Icons.shopping_bag_rounded),
         ),
       ),

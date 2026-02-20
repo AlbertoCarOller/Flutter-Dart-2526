@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tienda_online/firebase_options.dart';
 import 'package:tienda_online/provider/TemaProvider.dart';
+import 'package:tienda_online/screens/carro_screen.dart';
 import 'package:tienda_online/screens/login_screen.dart';
 import 'package:tienda_online/screens/producto_screen.dart';
 import 'package:tienda_online/screens/register_screen.dart';
@@ -82,6 +83,7 @@ class _PrincipalTiendaState extends State<PrincipalTienda> {
         "/login": (context) => LoginScreen(),
         "/register": (context) => RegisterScreen(),
         "/producto_screen": (context) => ProductoScreen(),
+        "/carro_screen": (context) => CarroScreen(),
         //"/tienda_screen": (context) => TiendaScreen(),
       },
     );

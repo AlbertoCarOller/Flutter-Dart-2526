@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -76,4 +77,21 @@ Future<UserCredential?> iniciarSesion(
     }
     return null;
   }
+}
+
+/// Esta función va a crear un nuevo documento para un usuario,
+/// este va a almacenar la fecha actual y una lista de mapas que es el
+/// historial de compras/pedidos y el pedido actual otro mapa
+Future<void> crearInfoUser(CollectionReference collection) async {
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+  // Y creamos la estructura del document
+  collection.doc().set({
+    // Guardamos la fecha actual para el servidor
+    "Fecha": FieldValue.serverTimestamp(),
+    // Guardamos una lista de carritos, que serán mapas
+    "Carritos": [],
+    // El carrito actual
+    "CarritoActual": {},
+    // Ponemos a true merge para que no aplaste la información que ya hay en el document
+  }, SetOptions(merge: true));
 }
