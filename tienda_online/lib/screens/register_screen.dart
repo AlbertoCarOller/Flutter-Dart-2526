@@ -99,13 +99,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // Se crea la cuenta del usuario
-                        await registrarse(
+                        UserCredential? userCredencital = await registrarse(
                           _controllerEmail.text,
                           _controllerPassword.text,
                           this.context,
                         );
                         // Creamos el document del usuario
-                        await crearInfoUser(FirebaseFirestore.instance.collection("informacion"));
+                        await crearInfoUser(
+                          FirebaseFirestore.instance.collection("informacion"),
+                          userCredencital?.user?.uid ?? "",
+                        );
                         if (mounted) {
                           if (ModalRoute.of(this.context)!.isCurrent) {
                             // Navegamos a TiendaScreen

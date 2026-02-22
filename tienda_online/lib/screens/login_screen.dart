@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tienda_online/provider/CarritoProvider.dart';
 
 import '../utils/functions.dart';
 import '../utils/commons.dart';
@@ -96,11 +98,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           this.context,
                         ).then((value) => value != null);
                       }
-                      // Creamos en caso de que no exista un document para el usuario
                       CollectionReference<Map<String, dynamic>> collection =
                           FirebaseFirestore.instance.collection("informacion");
-                      // Creamos un document para el usuario
-                      await crearInfoUser(collection);
+                      // Cargamos los datos del usuario (carrito)
+                      //await context.read<CarritoProvider>()
                       // Comprobamos que esté en el stack
                       if (mounted) {
                         // Comprobamos que sea la pantalla actual

@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tienda_online/api/conexion_api.dart';
+import 'package:tienda_online/provider/CarritoProvider.dart';
 import 'package:tienda_online/provider/TemaProvider.dart';
 
 import '../api/Producto.dart';
@@ -58,7 +61,14 @@ class _TiendaScreenState extends State<TiendaScreen> {
             foregroundColor: WidgetStatePropertyAll(Colors.white),
           ),
           // Navegamos hasta la pantalla del carrito
-          onPressed: () {
+          onPressed: () async {
+            // Obtenemos el id actual del usuario
+            String uid = FirebaseAuth.instance.currentUser?.uid ?? "";
+            // Cargamos el carro de firebase en local
+            await context.read<CarritoProvider>().mergeCarritoToLocal(
+              productos,
+              FirebaseFirestore.instance.collection("informacion").doc(uid),
+            );
             Navigator.pushNamed(context, "/carro_screen");
           },
           icon: Icon(Icons.shopping_bag_rounded),
@@ -147,7 +157,14 @@ class _TiendaScreenState extends State<TiendaScreen> {
                       ),
                     ),
                   );
-                } else {
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      "Error al cargar categorías (Problemas de conexión)",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
                   // Creamos una lista que va a almacenar todas las categorías no repetidas
                   List<String> listCategorias = snapshot.data!
                       .map((e) => e.category ?? "")
@@ -193,6 +210,13 @@ class _TiendaScreenState extends State<TiendaScreen> {
                       ],
                     ),
                   );
+                } else {
+                  return Center(
+                    child: Text(
+                      "No hay categotías",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
                 }
               },
             ),
@@ -219,7 +243,14 @@ class _TiendaScreenState extends State<TiendaScreen> {
                     ),
                   );
                   // En caso de que hayan cargado los datos se muestra el GridView de los productos
-                } else {
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      "Error al cargar los productos (Error de conexión)",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
                   List<Producto> productosPorCategoria = snapshot.data!.where((
                     element,
                   ) {
@@ -229,6 +260,13 @@ class _TiendaScreenState extends State<TiendaScreen> {
                     return categoriaActual == element.category!;
                   }).toList();
                   return GridViewProducts(productos: productosPorCategoria);
+                } else {
+                  return Center(
+                    child: Text(
+                      "No hay prodcutos",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
                 }
               },
             ),

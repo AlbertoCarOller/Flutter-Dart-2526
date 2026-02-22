@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tienda_online/firebase_options.dart';
+import 'package:tienda_online/provider/CarritoProvider.dart';
 import 'package:tienda_online/provider/TemaProvider.dart';
 import 'package:tienda_online/screens/carro_screen.dart';
 import 'package:tienda_online/screens/login_screen.dart';
@@ -17,7 +18,10 @@ void main() async {
   runApp(
     // Creamos un MultiProvider para los diferentes provider que tiene la App
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => TemaProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => TemaProvider()),
+        ChangeNotifierProvider(create: (_) => CarritoProvider()),
+      ],
       child: PrincipalTienda(),
     ),
   );

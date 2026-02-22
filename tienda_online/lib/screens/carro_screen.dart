@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:tienda_online/api/Producto.dart';
+import 'package:tienda_online/provider/CarritoProvider.dart';
 
 class CarroScreen extends StatefulWidget {
   const CarroScreen({super.key});
@@ -12,42 +15,32 @@ class CarroScreen extends StatefulWidget {
 
 class _CarroScreenState extends State<CarroScreen> {
   // Accedemos al documento del usuario actual
-  DocumentReference<Map<String, dynamic>> collectionReference =
-      FirebaseFirestore.instance.doc(FirebaseAuth.instance.currentUser!.uid);
+  DocumentReference<Map<String, dynamic>> documentReference = FirebaseFirestore
+      .instance
+      .collection("informacion")
+      .doc(FirebaseAuth.instance.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {
+    // Escuchamos los cambios del mapa de prodcutos
+    Map<Producto, int> productosProvider = context
+        .watch<CarritoProvider>()
+        .productos;
     return Scaffold(
       appBar: AppBar(title: Text("Carrito")),
-      body: StreamBuilder(
-        stream: collectionReference.snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Skeletonizer(
-              enabled: true,
-              child: ListView.builder(
-                itemBuilder: (context, index) => ListTile(title: Text("Texto")),
-                itemCount: 20,
-              ),
-            );
-          } else {
-            // Obtenemos los datos del document
-            Map<String, dynamic> datos =
-                snapshot.data!.data() as Map<String, dynamic>;
-            // Obtenemos el carrito actual
-            Map<String, int> carrito = datos["CarritoActual"];
-            return ListView.builder(
-              itemBuilder: (context, index) {
-               MapEntry<String, int> producto = carrito.entries.elementAt(index);
-                return ListTile(
-                  // El nombre del producto
-                  title: Text(producto.key),
-                );
-              },
-              itemCount: carrito.length,
-            );
-          }
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(
+              productosProvider.entries.elementAt(index).key.title ??
+                  "No disponible",
+            ),
+            subtitle: Text(
+              "Cantidad: ${productosProvider.entries.elementAt(index).value}",
+            ),
+          );
         },
+        itemCount: productosProvider.length,
       ),
     );
   }

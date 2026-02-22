@@ -33,6 +33,14 @@ class Producto {
   String toString() {
     return "$id, $title, $price, $description, $category, $image, $rating, ";
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Producto && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 class Rating {
@@ -49,4 +57,6 @@ class Rating {
   String toString() {
     return "$rate, $count, ";
   }
+
+
 }

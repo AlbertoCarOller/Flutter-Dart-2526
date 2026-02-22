@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tienda_online/api/Producto.dart';
+import 'package:tienda_online/provider/CarritoProvider.dart';
 import 'package:tienda_online/provider/TemaProvider.dart';
 
 class ProductoScreen extends StatefulWidget {
@@ -54,7 +57,18 @@ class _ProductoScreenState extends State<ProductoScreen> {
           backgroundColor: WidgetStatePropertyAll(Colors.black54),
           foregroundColor: WidgetStatePropertyAll(Colors.white),
         ),
-        onPressed: () {},
+        // Al presionar el botón se añadirá a la lista local
+        onPressed: () async {
+          // En caso de que el producto sea distinto de null, se añade
+          if (producto != null) {
+            await context.read<CarritoProvider>().addProducto(
+              producto!,
+              FirebaseFirestore.instance
+                  .collection("informacion")
+                  .doc(FirebaseAuth.instance.currentUser!.uid),
+            );
+          }
+        },
         icon: Icon(Icons.add_shopping_cart),
       ),
       body: Center(
