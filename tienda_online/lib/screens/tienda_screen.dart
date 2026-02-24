@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -39,6 +38,13 @@ class _TiendaScreenState extends State<TiendaScreen> {
     super.initState();
     // Cargamos los productos de la API
     productos = ConexionApi.cargarProductos();
+    // Mergeamos los datos de firebase a productos reales
+    context.read<CarritoProvider>().mergeCarritoToLocal(
+      productos,
+      FirebaseFirestore.instance
+          .collection("informacion")
+          .doc(FirebaseAuth.instance.currentUser?.uid ?? ""),
+    );
     scrollController.addListener(() => print(scrollController.position.pixels));
   }
 
@@ -54,7 +60,14 @@ class _TiendaScreenState extends State<TiendaScreen> {
       // FloatingActionButton, botón flotante en la parte derecha izquierda
       // Le ponemos Badge para que nos salga los número de notificaciones, en este caso el número de productos en el carrito
       floatingActionButton: Badge(
-        label: Text("0"),
+        label: Text(
+          context
+              .watch<CarritoProvider>()
+              .productos
+              .values
+              .fold(0, (previousValue, element) => previousValue + element)
+              .toString(),
+        ),
         child: IconButton(
           style: ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(Colors.black54),
@@ -175,7 +188,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
                     scrollDirection: Axis.horizontal,
                     controller: scrollController,
                     child: Row(
-                      spacing: 30,
+                      spacing: 2,
                       children: [
                         // Transformamos a un Set la lista para quedarnos con los no repetidos
                         for (int i = 0; i < listCategorias.length; i++)

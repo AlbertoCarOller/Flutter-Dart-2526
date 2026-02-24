@@ -34,7 +34,7 @@ class CarritoProvider extends ChangeNotifier {
       Map<String, dynamic> datos = value.data() as Map<String, dynamic>;
       // Devolvemos el mapa con los ids y cantidad de cada producto
       Map<String, dynamic> carrito = datos["CarritoActual"] ?? {};
-      return carrito.map((key, value) => MapEntry(key, (value as int)));
+      return carrito.map((key, value) => MapEntry(key, (value as num).toInt()));
     });
   }
 
@@ -59,7 +59,7 @@ class CarritoProvider extends ChangeNotifier {
                   .firstOrNull ??
               Producto(
                 id: 0,
-                title: "Sin prouctos",
+                title: "Sin productos",
                 price: 0,
                 description: "",
                 category: "",
@@ -73,5 +73,34 @@ class CarritoProvider extends ChangeNotifier {
       print("Error: $e");
       productos = {};
     }
+    notifyListeners();
+  }
+
+  /// Esta función va a eliminar 1 stock (carrito) del producto o el producto completo
+  Future<void> eliminarProducto(
+    Producto producto,
+    DocumentReference doc,
+  ) async {
+    // En caso de que el stock en la bolsa sea mayor a 1, solo se resta 1
+    if (productos.entries
+            .firstWhere((element) => element.key == producto)
+            .value >
+        1) {
+      // Decrementamos en 1 la cantidad que hay en el carrito del usuario (local)
+      productos.update(producto, (value) => --value);
+      // Decrementamos la cantidad en firebase, usamos merge para no borrar el map completo
+      doc.set({
+        "CarritoActual": {producto.id.toString(): FieldValue.increment(-1)},
+      }, SetOptions(merge: true));
+      // En caso de que el stock sea 1, eliminamos el producto directamente de la lista
+    } else {
+      // Eliminamos localmente
+      productos.remove(producto);
+      // Eliminamos de firebase
+      doc.set({
+        "CarritoActual": {producto.id.toString(): FieldValue.delete()},
+      }, SetOptions(merge: true));
+    }
+    notifyListeners();
   }
 }

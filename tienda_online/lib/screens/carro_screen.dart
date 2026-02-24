@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tienda_online/api/Producto.dart';
 import 'package:tienda_online/provider/CarritoProvider.dart';
 
@@ -27,17 +26,32 @@ class _CarroScreenState extends State<CarroScreen> {
         .watch<CarritoProvider>()
         .productos;
     return Scaffold(
-      appBar: AppBar(title: Text("Carrito")),
+      appBar: AppBar(title: Text("Carrito"), backgroundColor: Colors.purple.shade200),
       body: ListView.builder(
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              productosProvider.entries.elementAt(index).key.title ??
-                  "No disponible",
-            ),
-            subtitle: Text(
-              "Cantidad: ${productosProvider.entries.elementAt(index).value}",
-            ),
+          return Column(
+            children: [
+              ListTile(
+                // Botón para eliminar un stock o el producto completo si tiene 1
+                trailing: IconButton(
+                  onPressed: () async {
+                    await context.read<CarritoProvider>().eliminarProducto(
+                      productosProvider.entries.elementAt(index).key,
+                      documentReference,
+                    );
+                  },
+                  icon: Icon(Icons.remove, color: Colors.red),
+                ),
+                title: Text(
+                  productosProvider.entries.elementAt(index).key.title ??
+                      "No disponible",
+                ),
+                subtitle: Text(
+                  "Cantidad: ${productosProvider.entries.elementAt(index).value}",
+                ),
+              ),
+              Divider(),
+            ],
           );
         },
         itemCount: productosProvider.length,

@@ -21,7 +21,7 @@ class Producto {
     return Producto(
       id: json["id"],
       title: json["title"],
-      price: json["price"],
+      price: (json["price"] as num).toDouble(),
       description: json["description"],
       category: json["category"],
       image: json["image"],
@@ -50,13 +50,12 @@ class Rating {
   final int? count;
 
   factory Rating.fromJson(Map<String, dynamic> json) {
-    return Rating(rate: json["rate"], count: json["count"]);
+    return Rating(rate: (json["rate"] as num).toDouble(), count: json["count"]);
   }
 
   @override
   String toString() {
     return "$rate, $count, ";
   }
-
 
 }

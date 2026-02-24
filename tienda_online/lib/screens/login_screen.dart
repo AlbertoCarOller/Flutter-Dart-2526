@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tienda_online/provider/CarritoProvider.dart';
@@ -108,6 +109,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (ModalRoute.of(this.context)!.isCurrent) {
                           // En caso de que el usuario sea distinto de null, viajamos a la screen de la tienda
                           if (usuarioIniciado) {
+                            // Cargamos los productos de firebase
+                            await this.context
+                                .read<CarritoProvider>()
+                                .cargarProductosFirebase(
+                                  collection.doc(
+                                    FirebaseAuth.instance.currentUser?.uid ??
+                                        "",
+                                  ),
+                                );
                             // Volvemos hacia atrás, ya que si tenemos usuario debe ser la pantalla de la tienda
                             Navigator.pop(this.context);
                             // Viajamos a la TiendaScreen pero esta vez hacia adelante
