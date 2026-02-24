@@ -26,35 +26,43 @@ class _CarroScreenState extends State<CarroScreen> {
         .watch<CarritoProvider>()
         .productos;
     return Scaffold(
-      appBar: AppBar(title: Text("Carrito"), backgroundColor: Colors.purple.shade200),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              ListTile(
-                // Botón para eliminar un stock o el producto completo si tiene 1
-                trailing: IconButton(
-                  onPressed: () async {
-                    await context.read<CarritoProvider>().eliminarProducto(
-                      productosProvider.entries.elementAt(index).key,
-                      documentReference,
-                    );
-                  },
-                  icon: Icon(Icons.remove, color: Colors.red),
-                ),
-                title: Text(
-                  productosProvider.entries.elementAt(index).key.title ??
-                      "No disponible",
-                ),
-                subtitle: Text(
-                  "Cantidad: ${productosProvider.entries.elementAt(index).value}",
-                ),
-              ),
-              Divider(),
-            ],
-          );
-        },
-        itemCount: productosProvider.length,
+      appBar: AppBar(
+        title: Text("Carrito"),
+        backgroundColor: Colors.purple.shade200,
+      ),
+      body: Column(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  ListTile(
+                    // Botón para eliminar un stock o el producto completo si tiene 1
+                    trailing: IconButton(
+                      onPressed: () async {
+                        await context.read<CarritoProvider>().eliminarProducto(
+                          productosProvider.entries.elementAt(index).key,
+                          documentReference,
+                        );
+                      },
+                      icon: Icon(Icons.remove, color: Colors.red),
+                    ),
+                    title: Text(
+                      productosProvider.entries.elementAt(index).key.title ??
+                          "No disponible",
+                    ),
+                    subtitle: Text(
+                      "Cantidad: ${productosProvider.entries.elementAt(index).value}",
+                    ),
+                  ),
+                  Divider(),
+                ],
+              );
+            },
+            itemCount: productosProvider.length,
+          ),
+        ],
       ),
     );
   }
