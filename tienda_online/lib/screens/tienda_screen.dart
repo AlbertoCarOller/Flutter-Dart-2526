@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -137,7 +138,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
           ),
         ],
         // Para cambiar de color del tema
-        leading: IconButton(
+        leading: kIsWeb ? IconButton(
           onPressed: () {
             // Cambiamos el color del tema con read, este sirve para llamar funciones y demás
             context.read<TemaProvider>().cambiarTema();
@@ -149,7 +150,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
                 : Icons.light_mode,
             color: Colors.black,
           ),
-        ),
+        ) : null,
       ),
       // FutureBuilder para indicar que el bloque (el GridView) debe aparecer cuando haya cargado 'cargarProductos'
       body: Column(
@@ -168,7 +169,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
                         children: List.generate(
                           8,
                           (index) =>
-                              TextButton(onPressed: () {}, child: Text("")),
+                              TextButton(onPressed: () {}, child: Text("Categoría")),
                         ),
                       ),
                     ),
@@ -255,7 +256,10 @@ class _TiendaScreenState extends State<TiendaScreen> {
                         crossAxisSpacing: 2,
                         crossAxisCount: 5,
                       ),
-                      itemBuilder: (context, index) => Container(),
+                      itemBuilder: (context, index) => SizedBox(
+                        width: 300,
+                        height: 400,
+                      ),
                     ),
                   );
                   // En caso de que hayan cargado los datos se muestra el GridView de los productos
