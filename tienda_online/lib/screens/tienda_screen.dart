@@ -162,11 +162,14 @@ class _TiendaScreenState extends State<TiendaScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Skeletonizer(
                     enabled: true,
-                    child: Row(
-                      children: List.generate(
-                        8,
-                        (index) =>
-                            TextButton(onPressed: () {}, child: Text("")),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(
+                          8,
+                          (index) =>
+                              TextButton(onPressed: () {}, child: Text("")),
+                        ),
                       ),
                     ),
                   );

@@ -29,59 +29,62 @@ class _TextFieldPersonalizadoState extends State<TextFieldPersonalizado> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.controller,
-      // Si es visible o no
-      obscureText: visible,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        hint: Text(widget.label),
-        border: OutlineInputBorder(),
-        prefixIcon: widget.tipo.contains("password") == true
-            ? IconButton(
-          // Al pulsar cambiamos el estado para que sea visible la contraseña
-          onPressed: () {
-            setState(() {
-              visible = !visible;
-            });
-          },
-          icon: visible == true
-              ? Icon(Icons.visibility_off)
-              : Icon(Icons.visibility),
-        )
-            : null,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: TextFormField(
+        controller: widget.controller,
+        // Si es visible o no
+        obscureText: visible,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          hint: Text(widget.label),
+          border: OutlineInputBorder(),
+          prefixIcon: widget.tipo.contains("password") == true
+              ? IconButton(
+                  // Al pulsar cambiamos el estado para que sea visible la contraseña
+                  onPressed: () {
+                    setState(() {
+                      visible = !visible;
+                    });
+                  },
+                  icon: visible == true
+                      ? Icon(Icons.visibility_off)
+                      : Icon(Icons.visibility),
+                )
+              : null,
+        ),
+        validator: (value) {
+          String? mensajeTemporal = "";
+          // Validamos según el tipo con un 'switch'
+          switch (widget.tipo) {
+            // En caso de que haya que validar el formato de un email
+            case "email_validator":
+              mensajeTemporal =
+                  EmailValidator.validate(widget.controller.text) == false
+                  ? "El email tiene un formato incorrecto"
+                  : null;
+            // En caso de que haya que comprobar el formato de la contraseña
+            case "password_validator":
+              mensajeTemporal = value!.length < 8
+                  ? "La contraseña debe tener al menos 8 carateres"
+                  : null;
+            // En caso de que sea la réplica del password
+            case "replica_password":
+              mensajeTemporal =
+                  widget.controller.text != widget.controllerPassword.text
+                  ? "La contraseña debe ser la misma"
+                  : null;
+            // En caso de que el tipo sea caulquier otra cosa, solo se valida que no esté vacío
+            default:
+              mensajeTemporal = value!.isEmpty == true
+                  ? "El campo no puede estar vacío"
+                  : null;
+          }
+          // Retornamos el mensaje a validar
+          return mensajeTemporal;
+        },
       ),
-      validator: (value) {
-        String? mensajeTemporal = "";
-        // Validamos según el tipo con un 'switch'
-        switch (widget.tipo) {
-          // En caso de que haya que validar el formato de un email
-          case "email_validator":
-            mensajeTemporal =
-                EmailValidator.validate(widget.controller.text) == false
-                ? "El email tiene un formato incorrecto"
-                : null;
-          // En caso de que haya que comprobar el formato de la contraseña
-          case "password_validator":
-            mensajeTemporal = value!.length < 8
-                ? "La contraseña debe tener al menos 8 carateres"
-                : null;
-          // En caso de que sea la réplica del password
-          case "replica_password":
-            mensajeTemporal =
-                widget.controller.text != widget.controllerPassword.text
-                ? "La contraseña debe ser la misma"
-                : null;
-          // En caso de que el tipo sea caulquier otra cosa, solo se valida que no esté vacío
-          default:
-            mensajeTemporal = value!.isEmpty == true
-                ? "El campo no puede estar vacío"
-                : null;
-        }
-        // Retornamos el mensaje a validar
-        return mensajeTemporal;
-      },
     );
   }
 }

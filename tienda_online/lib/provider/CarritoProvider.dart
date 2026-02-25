@@ -103,4 +103,13 @@ class CarritoProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  /// Esta función va a eliminar todos los productos del carrito
+  Future<void> eliminarProductos(DocumentReference doc) async {
+    // Eliminamos los productos localmente
+    productos = {};
+    // Quitamos todo lo que hay en el carrito (Firebase)
+    doc.update({"CarritoActual": {}});
+    notifyListeners();
+  }
 }
