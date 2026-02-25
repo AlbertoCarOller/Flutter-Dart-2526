@@ -46,18 +46,23 @@ class _CarroScreenState extends State<CarroScreen> {
                             elevation: 2,
                             child: ListTile(
                               // Botón para eliminar un stock o el producto completo si tiene 1
-                              trailing: IconButton(
-                                onPressed: () async {
-                                  await context
-                                      .read<CarritoProvider>()
-                                      .eliminarProducto(
-                                        productosProvider.entries
-                                            .elementAt(index)
-                                            .key,
-                                        documentReference,
-                                      );
-                                },
-                                icon: Icon(Icons.remove, color: Colors.red),
+                              trailing: Semantics(
+                                label:
+                                    "Quitar una unidad de ${productosProvider.entries.elementAt(index).key.title}",
+                                excludeSemantics: true,
+                                child: IconButton(
+                                  onPressed: () async {
+                                    await context
+                                        .read<CarritoProvider>()
+                                        .eliminarProducto(
+                                          productosProvider.entries
+                                              .elementAt(index)
+                                              .key,
+                                          documentReference,
+                                        );
+                                  },
+                                  icon: Icon(Icons.remove, color: Colors.red),
+                                ),
                               ),
                               title: Text(
                                 productosProvider.entries
@@ -80,7 +85,10 @@ class _CarroScreenState extends State<CarroScreen> {
                 // Aquí está el contenedor con el total y el botón de comprar
                 Container(
                   decoration: BoxDecoration(
-                    border: Border(top: BorderSide(color: Colors.purple.shade400))
+                    color: Colors.purple.shade100,
+                    border: Border(
+                      top: BorderSide(color: Colors.purple.shade400),
+                    ),
                   ),
                   alignment: Alignment.center,
                   child: Padding(
@@ -94,35 +102,82 @@ class _CarroScreenState extends State<CarroScreen> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color:
-                                context.watch<TemaProvider>().temaActual ==
-                                    ThemeMode.light
-                                ? Colors.black
-                                : Colors.white,
+                            color: Colors.black,
                           ),
                         ),
-                        TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              Colors.purple.shade400,
+                        // Semantics para el botón de comprar
+                        Semantics(
+                          label: "Comprar productos",
+                          // Ignora el texto del chill
+                          excludeSemantics: true,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                Colors.purple.shade400,
+                              ),
+                              foregroundColor: WidgetStatePropertyAll(
+                                Colors.white,
+                              ),
                             ),
-                            foregroundColor: WidgetStatePropertyAll(
-                              Colors.white,
-                            ),
-                          ),
-                          // Eliminamos todos los productos al comprar
-                          onPressed: () async {
-                            await context
-                                .read<CarritoProvider>()
-                                .eliminarProductos(documentReference);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: Text(
-                              "Comprar",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                            // Eliminamos todos los productos al comprar
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text(
+                                    "¿Seguro que quieres realizar la compra?",
+                                  ),
+                                  content: Semantics(
+                                    child: Text(
+                                      "Vas a realizar una compra por un valor de ${productosProvider.entries.map((e) => (e.key.price ?? 0) * e.value).fold(0.0, (previousValue, element) => previousValue + element).toStringAsFixed(2)} €",
+                                    ),
+                                  ),
+                                  actions: [
+                                    // Al comprar
+                                    Semantics(
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          if (context.mounted) {
+                                            await context
+                                                .read<CarritoProvider>()
+                                                .eliminarProductos(
+                                                  documentReference,
+                                                );
+                                            // Cerramos el Dialog
+                                            Navigator.pop(this.context);
+                                          }
+                                        },
+                                        child: Text(
+                                          "Sí",
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
+                                    // No se acepta la compra
+                                    Semantics(
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "No",
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  backgroundColor: Colors.purple.shade100,
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Text(
+                                "Comprar",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

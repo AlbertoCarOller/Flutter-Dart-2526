@@ -61,6 +61,8 @@ class _TiendaScreenState extends State<TiendaScreen> {
       // FloatingActionButton, botón flotante en la parte derecha izquierda
       // Le ponemos Badge para que nos salga los número de notificaciones, en este caso el número de productos en el carrito
       floatingActionButton: Badge(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
         label: Text(
           context
               .watch<CarritoProvider>()
@@ -85,7 +87,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
             );
             Navigator.pushNamed(context, "/carro_screen");
           },
-          icon: Icon(Icons.shopping_bag_rounded),
+          icon: Icon(Icons.shopping_bag_rounded, size: 35,),
         ),
       ),
       appBar: AppBar(
@@ -138,19 +140,21 @@ class _TiendaScreenState extends State<TiendaScreen> {
           ),
         ],
         // Para cambiar de color del tema
-        leading: kIsWeb ? IconButton(
-          onPressed: () {
-            // Cambiamos el color del tema con read, este sirve para llamar funciones y demás
-            context.read<TemaProvider>().cambiarTema();
-          },
-          icon: Icon(
-            // Dependiendo del modo en el que esté muestra un icono u otro
-            Theme.of(context).brightness == Brightness.light
-                ? Icons.dark_mode
-                : Icons.light_mode,
-            color: Colors.black,
-          ),
-        ) : null,
+        leading: kIsWeb
+            ? IconButton(
+                onPressed: () {
+                  // Cambiamos el color del tema con read, este sirve para llamar funciones y demás
+                  context.read<TemaProvider>().cambiarTema();
+                },
+                icon: Icon(
+                  // Dependiendo del modo en el que esté muestra un icono u otro
+                  Theme.of(context).brightness == Brightness.light
+                      ? Icons.dark_mode
+                      : Icons.light_mode,
+                  color: Colors.black,
+                ),
+              )
+            : null,
       ),
       // FutureBuilder para indicar que el bloque (el GridView) debe aparecer cuando haya cargado 'cargarProductos'
       body: Column(
@@ -168,8 +172,10 @@ class _TiendaScreenState extends State<TiendaScreen> {
                       child: Row(
                         children: List.generate(
                           8,
-                          (index) =>
-                              TextButton(onPressed: () {}, child: Text("Categoría")),
+                          (index) => TextButton(
+                            onPressed: () {},
+                            child: Text("Categoría"),
+                          ),
                         ),
                       ),
                     ),
@@ -200,7 +206,20 @@ class _TiendaScreenState extends State<TiendaScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: ChoiceChip(
-                              label: Text(listCategorias.elementAt(i)),
+                              showCheckmark: false,
+                              label: Text(
+                                listCategorias.elementAt(i),
+                                style: TextStyle(
+                                  // Controlamos el color dependiendo del modo (oscuro/claro)
+                                  color:
+                                      categoriaActual ==
+                                              listCategorias.elementAt(i) &&
+                                          Theme.of(context).brightness ==
+                                              Brightness.light
+                                      ? Colors.white
+                                      : null,
+                                ),
+                              ),
                               selected:
                                   categoriaActual ==
                                   listCategorias.elementAt(i),
@@ -221,7 +240,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
                                   });
                                 }
                               },
-                              selectedColor: Colors.purple.shade300,
+                              selectedColor: Color(0xFF7E008F),
                             ),
                           ),
                       ],
@@ -256,10 +275,8 @@ class _TiendaScreenState extends State<TiendaScreen> {
                         crossAxisSpacing: 2,
                         crossAxisCount: 5,
                       ),
-                      itemBuilder: (context, index) => SizedBox(
-                        width: 300,
-                        height: 400,
-                      ),
+                      itemBuilder: (context, index) =>
+                          SizedBox(width: 300, height: 400),
                     ),
                   );
                   // En caso de que hayan cargado los datos se muestra el GridView de los productos

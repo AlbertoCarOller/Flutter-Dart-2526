@@ -1,0 +1,5 @@
+Comandos:
+
+Comando para crear la APK de la app (main) -> flutter build apk --release
+
+Comando para crear la APK de la app (sin main literal) -> flutter build apk --release -t lib/nombre_main.dart

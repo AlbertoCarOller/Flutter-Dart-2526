@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tienda_online/provider/TemaProvider.dart';
 
 class Inicio extends StatefulWidget {
   const Inicio({super.key});
@@ -33,8 +31,8 @@ class _InicioState extends State<Inicio> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  // Dependiendo del modo en el que esté cambiamos la iamgen, como efecto rebote de la repintada al cambiar el tema
-                  context.watch<TemaProvider>().temaActual == ThemeMode.light
+                  // Dependiendo del modo en el que esté cambiamos la imagen, como efecto rebote de la repintada al cambiar el tema
+                  Theme.of(context).brightness == Brightness.light
                       ? "assets/images/logoKivoCompleto.png"
                       : "assets/images/logoCompletoKivonBlanco.png",
                   scale: 2,
