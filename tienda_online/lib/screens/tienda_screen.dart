@@ -17,6 +17,7 @@ class TiendaScreen extends StatefulWidget {
   State<TiendaScreen> createState() => _TiendaScreenState();
 }
 
+// TODO: hacer cambios visuales para hacerlo más bonita
 class _TiendaScreenState extends State<TiendaScreen> {
   // Creamos una variable que va a almacenar los productos desde la API
   // Hacemos la lista Future para que se puedan cargar los datos en el initState()
