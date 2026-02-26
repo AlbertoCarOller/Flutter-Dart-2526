@@ -88,7 +88,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
             );
             Navigator.pushNamed(context, "/carro_screen");
           },
-          icon: Icon(Icons.shopping_bag_rounded, size: 35,),
+          icon: Icon(Icons.shopping_bag_rounded, size: 35),
         ),
       ),
       appBar: AppBar(
@@ -260,6 +260,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
           ),
           Expanded(
             flex: 10,
+            // FutureBuilder que corresponde al GridView de los productos
             child: FutureBuilder(
               // A future le indicamos que se va a construir cuando termine 'cargarProductos'
               future: productos,
@@ -276,8 +277,10 @@ class _TiendaScreenState extends State<TiendaScreen> {
                         crossAxisSpacing: 2,
                         crossAxisCount: 5,
                       ),
-                      itemBuilder: (context, index) =>
-                          SizedBox(width: 300, height: 400),
+                      itemBuilder: (context, index) => SizedBox(
+                        width: 300,
+                        height: 400,
+                      ),
                     ),
                   );
                   // En caso de que hayan cargado los datos se muestra el GridView de los productos
