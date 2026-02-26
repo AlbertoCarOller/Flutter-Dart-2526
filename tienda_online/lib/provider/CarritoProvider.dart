@@ -47,7 +47,7 @@ class CarritoProvider extends ChangeNotifier {
     try {
       // Obtenemos los productos de Firebase
       await cargarProductosFirebase(doc);
-      // Esperamos a que cargen los prodcutos de la API
+      // Esperamos a que carguen los prodcutos de la API
       List<Producto> productosCargados = await productosTotales.then(
         (value) => value,
       );
@@ -71,6 +71,7 @@ class CarritoProvider extends ChangeNotifier {
       );
     } catch (e) {
       print("Error: $e");
+      // Mapa vacío de productos en caso de error
       productos = {};
     }
     notifyListeners();

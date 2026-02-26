@@ -53,10 +53,16 @@ class _ProductoScreenState extends State<ProductoScreen> {
       // Botón para añadir un producto al carrito
       floatingActionButton: IconButton(
         style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(Theme.of(context).brightness == Brightness.light ? Colors.black54
-          : Colors.white54),
-          foregroundColor: WidgetStatePropertyAll(Theme.of(context).brightness == Brightness.light ? Colors.white
-          : Colors.black),
+          backgroundColor: WidgetStatePropertyAll(
+            Theme.of(context).brightness == Brightness.light
+                ? Colors.black54
+                : Colors.white54,
+          ),
+          foregroundColor: WidgetStatePropertyAll(
+            Theme.of(context).brightness == Brightness.light
+                ? Colors.white
+                : Colors.black,
+          ),
         ),
         // Al presionar el botón se añadirá a la lista local
         onPressed: () async {
@@ -70,71 +76,61 @@ class _ProductoScreenState extends State<ProductoScreen> {
             );
           }
         },
-        icon: Icon(Icons.add_shopping_cart, size: 35,),
+        icon: Icon(Icons.add_shopping_cart, size: 35),
       ),
       body: SafeArea(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Padding(
-                  padding: EdgeInsetsGeometry.only(bottom: 25),
-                  child: Text(
-                    producto?.title ?? "No disponible",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? Colors.black
-                          : Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Image.network(
+                    producto?.image ?? "assets/images/kivonLogoSinFondo.png",
+                    scale: 1.5,
                   ),
-                ),
-                Stack(
-                  children: [
-                    Image.network(
-                      producto?.image ??
-                          "assets/images/kivonLogoSinFondo.png",
-                      scale: 1.5,
-                    ),
-                    Positioned(
-                      bottom: 1,
-                      right: 0,
-                      left: 0,
-                      child: Container(
-                        color:
-                            Theme.of(context).brightness == Brightness.light
-                            ? Colors.black87
-                            : Colors.white70,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            "Precio: ${producto?.price ?? "No disponible"} €",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.white
-                                  : Colors.black,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(bottom: 15, top: 25),
+                    child: Text(
+                      producto?.title ?? "No disponible",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
                       ),
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Container(
-                    alignment: Alignment.centerLeft,
+                  ),
+                  // Información del producto
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Divider(thickness: 4,),
+                        // El precio del producto
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              "Precio: ${producto?.price ?? "No disponible"} €",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        Divider(thickness: 4),
+                        // La descripción
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6),
                           child: Text(
@@ -149,8 +145,8 @@ class _ProductoScreenState extends State<ProductoScreen> {
                             ),
                           ),
                         ),
-                        SingleChildScrollView(
-                          controller: scrollController,
+                        Padding(
+                          padding: EdgeInsetsGeometry.only(bottom: 20),
                           child: Text(
                             producto?.description ?? "No disponible",
                             style: TextStyle(
@@ -162,11 +158,48 @@ class _ProductoScreenState extends State<ProductoScreen> {
                             ),
                           ),
                         ),
+                        Divider(thickness: 4),
+                        // La valoración
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Estrellas: ${producto?.rating?.rate ?? "No disponible"}",
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                                fontSize: 20,
+                              ),
+                            ),
+                            Icon(Icons.star),
+                          ],
+                        ),
+                        Divider(thickness: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Votaciones: ${producto?.rating?.count ?? "No disponible"}",
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                                fontSize: 20,
+                              ),
+                            ),
+                            Icon(Icons.people),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
