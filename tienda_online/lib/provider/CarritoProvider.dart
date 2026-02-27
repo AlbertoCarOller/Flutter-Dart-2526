@@ -30,11 +30,17 @@ class CarritoProvider extends ChangeNotifier {
   Future<void> cargarProductosFirebase(DocumentReference doc) async {
     // El get() devuelve el snapshot del Document
     productosFirebase = await doc.get().then((value) {
-      // Obtenemos el mapa del carrito y lo cargamos en el local
-      Map<String, dynamic> datos = value.data() as Map<String, dynamic>;
-      // Devolvemos el mapa con los ids y cantidad de cada producto
-      Map<String, dynamic> carrito = datos["CarritoActual"] ?? {};
-      return carrito.map((key, value) => MapEntry(key, (value as num).toInt()));
+      // Comprobamos que haya datos
+      if (value.exists && value.data() != null) {
+        // Obtenemos el mapa del carrito y lo cargamos en el local
+        Map<String, dynamic> datos = value.data() as Map<String, dynamic>;
+        // Devolvemos el mapa con los ids y cantidad de cada producto
+        Map<String, dynamic> carrito = datos["CarritoActual"] ?? {};
+        return carrito.map(
+          (key, value) => MapEntry(key, (value as num).toInt()),
+        );
+      }
+      return {};
     });
   }
 

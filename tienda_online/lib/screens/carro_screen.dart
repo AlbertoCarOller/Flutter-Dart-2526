@@ -46,23 +46,45 @@ class _CarroScreenState extends State<CarroScreen> {
                             elevation: 2,
                             child: ListTile(
                               // Botón para eliminar un stock o el producto completo si tiene 1
-                              trailing: Semantics(
-                                label:
-                                    "Quitar una unidad de ${productosProvider.entries.elementAt(index).key.title}",
-                                excludeSemantics: true,
-                                child: IconButton(
-                                  onPressed: () async {
-                                    await context
-                                        .read<CarritoProvider>()
-                                        .eliminarProducto(
+                              trailing: Column(
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: () async {
+                                        await context
+                                            .read<CarritoProvider>()
+                                            .eliminarProducto(
                                           productosProvider.entries
                                               .elementAt(index)
                                               .key,
                                           documentReference,
                                         );
-                                  },
-                                  icon: Icon(Icons.remove, color: Colors.red),
-                                ),
+                                      },
+                                      icon: Icon(
+                                        Icons.remove,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: () async {
+                                        await context
+                                            .read<CarritoProvider>()
+                                            .addProducto(
+                                          productosProvider.entries
+                                              .elementAt(index)
+                                              .key,
+                                          documentReference,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.add,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               title: Text(
                                 productosProvider.entries

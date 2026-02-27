@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -193,6 +195,7 @@ class _TiendaScreenState extends State<TiendaScreen> {
                   List<String> listCategorias = snapshot.data!
                       .map((e) => e.category ?? "")
                       .where((element) => element.isNotEmpty)
+                      // Transformamos a un Set la lista para quedarnos con los no repetidos
                       .toSet()
                       .toList();
                   return SingleChildScrollView(
@@ -201,7 +204,6 @@ class _TiendaScreenState extends State<TiendaScreen> {
                     child: Row(
                       spacing: 2,
                       children: [
-                        // Transformamos a un Set la lista para quedarnos con los no repetidos
                         for (int i = 0; i < listCategorias.length; i++)
                           // Es como TextButton con un formato de elección
                           Padding(
@@ -277,10 +279,8 @@ class _TiendaScreenState extends State<TiendaScreen> {
                         crossAxisSpacing: 2,
                         crossAxisCount: 5,
                       ),
-                      itemBuilder: (context, index) => SizedBox(
-                        width: 300,
-                        height: 400,
-                      ),
+                      itemBuilder: (context, index) =>
+                          SizedBox(width: 300, height: 400),
                     ),
                   );
                   // En caso de que hayan cargado los datos se muestra el GridView de los productos
@@ -335,6 +335,7 @@ class GridViewProducts extends StatelessWidget {
       ),
 
       itemBuilder: (context, index) {
+        int descuento = Random().nextInt(productos.length);
         return GestureDetector(
           // Navegamos a la pantalla del producto concreto
           onTap: () => Navigator.pushNamed(
@@ -367,7 +368,10 @@ class GridViewProducts extends StatelessWidget {
                     right: 0,
                     left: 0,
                     child: Container(
-                      color: Colors.black54,
+                      // Generamos un número aleatorio
+                      color: index == descuento
+                          ? Colors.orange.shade500
+                          : Colors.black54,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 4,
@@ -387,7 +391,9 @@ class GridViewProducts extends StatelessWidget {
                               maxLines: 1,
                             ),
                             Text(
-                              "${productos[index].price!} €",
+                              descuento == index
+                                  ? "${calcularDescuento(productos.elementAt(index), 0.3).toStringAsFixed(2)} €"
+                                  : "${productos.elementAt(index).price!} €",
                               // extOverflow.ellipsis -> Hace que cuando haya overflow se pongan '...'
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -411,4 +417,9 @@ class GridViewProducts extends StatelessWidget {
       itemCount: productos.length,
     );
   }
+}
+
+// Esta función va a calcular un descuento para un producto
+double calcularDescuento(Producto producto, double descuento) {
+  return producto.price! - (producto.price! * descuento);
 }
