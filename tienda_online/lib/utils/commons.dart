@@ -67,7 +67,7 @@ class _TextFieldPersonalizadoState extends State<TextFieldPersonalizado> {
             // En caso de que haya que comprobar el formato de la contraseña
             case "password_validator":
               mensajeTemporal = value!.length < 8
-                  ? "La contraseña debe tener al menos 8 carateres"
+                  ? "La contraseña debe tener al menos 8 caracteres"
                   : null;
             // En caso de que sea la réplica del password
             case "replica_password":
